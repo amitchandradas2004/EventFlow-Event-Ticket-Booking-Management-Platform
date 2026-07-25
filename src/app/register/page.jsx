@@ -39,6 +39,8 @@ export default function SignUpPage() {
         password: user?.password,
         role: user?.role || "attendee",
         image: user?.image,
+        isBlocked: false,
+        isPremium: false,
       });
 
       if (data) {
@@ -58,6 +60,8 @@ export default function SignUpPage() {
   const handleGoogleSignIn = async () => {
     const data = await authClient.signIn.social({
       provider: "google",
+      isBlocked: false,
+      isPremium: false,
     });
   };
   const container = {

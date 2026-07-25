@@ -27,6 +27,32 @@ export const auth = betterAuth({
                 required: false,
                 defaultValue: "attendee",
             },
+            isBlocked: {
+                type: "boolean",
+                required: false,
+                defaultValue: false,
+            },
+            isPremium: {
+                type: "boolean",
+                required: false,
+                defaultValue: false,
+            },
+        },
+    },
+    databaseHooks: {
+        user: {
+            create: {
+                before: async (user) => {
+                    return {
+                        data: {
+                            ...user,
+                            role: user.role || "attendee",
+                            isBlocked: user.isBlocked ?? false,
+                            isPremium: user.isPremium ?? false,
+                        },
+                    };
+                },
+            },
         },
     },
 });

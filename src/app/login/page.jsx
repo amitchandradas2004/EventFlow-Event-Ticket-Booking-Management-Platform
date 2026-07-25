@@ -50,6 +50,8 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     const data = await authClient.signIn.social({
       provider: "google",
+      isBlocked: false,
+      isPremium: false,
     });
   };
   const container = {
