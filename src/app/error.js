@@ -104,7 +104,7 @@ export default function Error({ error, reset }) {
 
         {/* Footer */}
         <p className="mt-8 text-center text-sm text-slate-500 dark:text-slate-500">
-          Ticketo • Event Booking Platform
+          EventFlow • Event Booking Platform
         </p>
       </motion.div>
     </main>

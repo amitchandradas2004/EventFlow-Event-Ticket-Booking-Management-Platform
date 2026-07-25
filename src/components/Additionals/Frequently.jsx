@@ -4,12 +4,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-// Edit this array with your own Ticketo FAQ content
+// Edit this array with your own EventFlow FAQ content
 const faqs = [
   {
-    question: "How do I book a ticket on Ticketo?",
+    question: "How do I book a ticket on EventFlow?",
     answer:
-      "Search for your event, pick your preferred seats or ticket tier, and check out securely. Your e-ticket lands in your email and your Ticketo account instantly — no printing required.",
+      "Search for your event, pick your preferred seats or ticket tier, and check out securely. Your e-ticket lands in your email and your EventFlow account instantly — no printing required.",
   },
   {
     question: "Can I get a refund if I cancel my booking?",
@@ -22,7 +22,7 @@ const faqs = [
       "You'll get an email and in-app notification right away. For cancelled events, tickets are automatically refunded. For postponed events, your ticket stays valid for the new date unless you request a refund.",
   },
   {
-    question: "Is my payment information safe with Ticketo?",
+    question: "Is my payment information safe with EventFlow?",
     answer:
       "Absolutely. We never store your card details on our servers — all payments are processed through PCI-DSS compliant providers with end-to-end encryption.",
   },
@@ -151,7 +151,7 @@ export default function Frequently() {
           </h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-slate-600 sm:text-base dark:text-slate-300/70 transition-colors duration-500">
             Everything you need to know about booking, refunds, and getting into
-            your next event with Ticketo.
+            your next event with EventFlow.
           </p>
         </motion.div>
 

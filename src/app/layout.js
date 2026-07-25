@@ -13,8 +13,8 @@ const inter = Inter({
   subsets: ["latin"],
 });
 export const metadata = {
-  title: "Ticketo - Event Ticket Booking Platform",
-  description: "Book tickets for your favorite events with Ticketo",
+  title: "EventFlow - Event Ticket Booking Platform",
+  description: "Book tickets for your favorite events with EventFlow",
 };
 
 export default function RootLayout({ children }) {

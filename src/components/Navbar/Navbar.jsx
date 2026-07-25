@@ -33,7 +33,7 @@ export default function Navbar({
       >
         <Ticket size={20} />
       </motion.div>
-      <span className="text-2xl font-bold tracking-tight">Ticketo</span>
+      <span className="text-2xl font-bold tracking-tight">EventFlow</span>
     </Link>
   ),
   items = defaultItems,

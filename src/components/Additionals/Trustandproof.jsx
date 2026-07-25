@@ -24,7 +24,7 @@ const testimonials = [
     name: "Nusrat Jahan",
     role: "Attended Champions League Screening Night",
     quote:
-      "The event got rescheduled and Ticketo notified me before I even checked my email. Refund policy was crystal clear too.",
+      "The event got rescheduled and EventFlow notified me before I even checked my email. Refund policy was crystal clear too.",
     rating: 4,
   },
   {
@@ -209,7 +209,7 @@ export default function TrustAndProof() {
             </span>
           </h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-slate-600 sm:text-base dark:text-slate-300/70 transition-colors duration-500">
-            Real feedback from real attendees who booked through Ticketo.
+            Real feedback from real attendees who booked through EventFlow.
           </p>
         </motion.div>
 
@@ -235,7 +235,7 @@ export default function TrustAndProof() {
             variants={itemVariants}
             className="mb-6 text-center text-xs font-semibold uppercase tracking-wider text-slate-500 sm:mb-8 dark:text-slate-400 transition-colors duration-500"
           >
-            Venues & partners who trust Ticketo
+            Venues & partners who trust EventFlow
           </motion.p>
 
           <motion.div

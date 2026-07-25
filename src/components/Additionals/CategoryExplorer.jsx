@@ -281,7 +281,7 @@ export default function CategoryExplorer() {
                 Hosting an Event or Concert?
               </h4>
               <p className="mt-2 text-indigo-100 text-sm sm:text-base max-w-xl">
-                Sell tickets with 0% setup fee, instant gate QR scanner app, and real-time seating & sales analytics on Ticketo.
+                Sell tickets with 0% setup fee, instant gate QR scanner app, and real-time seating & sales analytics on EventFlow.
               </p>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-3">

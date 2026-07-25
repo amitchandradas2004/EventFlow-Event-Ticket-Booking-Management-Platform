@@ -47,7 +47,11 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-
+  const handleGoogleSignIn = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+  };
   const container = {
     hidden: {},
     show: {
@@ -175,6 +179,7 @@ export default function LoginPage() {
 
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
             <Button
+              onClick={handleGoogleSignIn}
               className="w-full rounded-full border hover:bg-indigo-600 transition"
             >
               <FcGoogle size={20} />

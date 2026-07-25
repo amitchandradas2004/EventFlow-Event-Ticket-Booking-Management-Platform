@@ -88,7 +88,7 @@ export default function Loading() {
             }}
             className="text-3xl font-bold text-slate-800 dark:text-white"
           >
-            Ticketo
+            EventFlow
           </motion.h2>
 
           <p className="mt-2 text-slate-500 dark:text-slate-400">

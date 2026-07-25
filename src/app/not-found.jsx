@@ -133,7 +133,7 @@ export default function NotFound() {
           variants={item}
           className="text-sm text-slate-500 dark:text-slate-500"
         >
-          Ticketo • Your Event Booking Platform
+          EventFlow • Your Event Booking Platform
         </motion.p>
       </motion.div>
     </main>

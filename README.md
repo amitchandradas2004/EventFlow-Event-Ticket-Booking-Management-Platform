@@ -1,6 +1,6 @@
-# 🎟️ Ticketo - Client
+# 🎟️ EventFlow - Client
 
-A modern, responsive Event Ticket Booking & Management Platform built with **Next.js**. Ticketo allows attendees to discover and purchase event tickets, organizers to manage events and organizations, and admins to moderate the platform through dedicated dashboards.
+A modern, responsive Event Ticket Booking & Management Platform built with **Next.js**. EventFlow allows attendees to discover and purchase event tickets, organizers to manage events and organizations, and admins to moderate the platform through dedicated dashboards.
 
 ---
 
@@ -13,7 +13,7 @@ A modern, responsive Event Ticket Booking & Management Platform built with **Nex
 
 ## 📖 Project Overview
 
-Ticketo is a full-stack event management platform that connects **Attendees**, **Organizers**, and **Admins** in a secure ecosystem.
+EventFlow is a full-stack event management platform that connects **Attendees**, **Organizers**, and **Admins** in a secure ecosystem.
 
 Users can browse upcoming events, purchase tickets securely through Stripe, manage bookings, and view payment history. Organizers can create organizations, publish events, monitor sales, and upgrade to Premium for unlimited event creation. Admins oversee users, moderate events, and monitor platform analytics.
 

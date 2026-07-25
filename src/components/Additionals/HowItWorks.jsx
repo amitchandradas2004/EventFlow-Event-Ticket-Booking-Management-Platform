@@ -31,7 +31,7 @@
 //     step: "04",
 //     title: "Get your e-ticket",
 //     description:
-//       "Your QR-coded ticket lands instantly in your email and Ticketo account. Just scan and walk in.",
+//       "Your QR-coded ticket lands instantly in your email and EventFlow account. Just scan and walk in.",
 //   },
 // ];
 
@@ -111,7 +111,7 @@
 //             </span>
 //           </h2>
 //           <p className="mx-auto mt-3 max-w-md text-sm text-gray-500 sm:text-base dark:text-white/50">
-//             Booking your next event with Ticketo takes less than two minutes,
+//             Booking your next event with EventFlow takes less than two minutes,
 //             start to finish.
 //           </p>
 //         </motion.div>
@@ -165,7 +165,7 @@ const steps = [
     step: "04",
     title: "Get your e-ticket",
     description:
-      "Your QR-coded ticket lands instantly in your email and Ticketo account. Just scan and walk in.",
+      "Your QR-coded ticket lands instantly in your email and EventFlow account. Just scan and walk in.",
   },
 ];
 
@@ -246,7 +246,7 @@ export default function HowItWorks() {
             </span>
           </h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-slate-600 sm:text-base dark:text-slate-300/70 transition-colors duration-500">
-            Booking your next event with Ticketo takes less than two minutes,
+            Booking your next event with EventFlow takes less than two minutes,
             start to finish.
           </p>
         </motion.div>

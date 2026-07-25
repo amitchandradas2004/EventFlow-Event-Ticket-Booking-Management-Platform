@@ -69,7 +69,7 @@ export default function Footer() {
                 <Ticket size={24} />
               </motion.div>
 
-              <span className="text-3xl font-bold tracking-tight">Ticketo</span>
+              <span className="text-3xl font-bold tracking-tight">EventFlow</span>
             </Link>
 
             <p className="mt-6 max-w-sm leading-7 text-slate-600 dark:text-slate-400">
@@ -193,7 +193,7 @@ export default function Footer() {
           viewport={{ once: true }}
           className="mt-16 flex flex-col items-center justify-between gap-5 border-t border-slate-200 pt-8 text-sm text-slate-500 dark:border-slate-800 md:flex-row"
         >
-          <p>© {new Date().getFullYear()} Ticketo. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} EventFlow. All rights reserved.</p>
 
           <div className="flex gap-6">
             <Link
