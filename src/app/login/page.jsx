@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@heroui/react";
 import { motion } from "framer-motion";
-import { Eye } from "lucide-react";
+import { Eye, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -21,13 +21,31 @@ import { FcGoogle } from "react-icons/fc";
 
 export default function LoginPage() {
   const [isVisible, setIsVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const user = Object.fromEntries(formData.entries());
-
+    setLoading(true);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const user = Object.fromEntries(formData.entries());
+      const { data, error } = await authClient.signIn.email({
+        email: user.email,
+        password: user.password,
+      });
+      if (data) {
+        toast.success("Logged in successfully!");
+        router.push("/");
+      }
+      if (error) {
+        toast.error(error?.message || "Invalid credentials");
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const container = {
@@ -111,11 +129,22 @@ export default function LoginPage() {
           {/* BUTTON */}
           <motion.div
             variants={fadeUp}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: loading ? 1 : 1.02 }}
+            whileTap={{ scale: loading ? 1 : 0.98 }}
           >
-            <Button type="submit" className="w-full mt-5 bg-indigo-600">
-              Login
+            <Button
+              type="submit"
+              isDisabled={loading}
+              className="w-full mt-5 bg-indigo-600 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Logging in...
+                </>
+              ) : (
+                "Login"
+              )}
             </Button>
           </motion.div>
         </Form>

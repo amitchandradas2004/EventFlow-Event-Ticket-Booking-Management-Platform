@@ -12,7 +12,7 @@ import {
   TextField,
 } from "@heroui/react";
 import { motion } from "framer-motion";
-import { Eye } from "lucide-react";
+import { Eye, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -23,27 +23,35 @@ import toast from "react-hot-toast";
 
 export default function SignUpPage() {
   const [isVisible, setIsVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const user = Object.fromEntries(formData.entries());
-    console.log(user)
-    const { data, error } = await authClient.signUp.email({
-      name: user?.name,
-      email: user?.email,
-      password: user?.password,
-      role: user?.role || "attendee",
-      image: user?.image,
-    })
-    console.log(data, error);
-    if (data) {
-      toast.success("Account created successfully! Now you can login");
-      router.push("/login");
-    }
-    if (error) {
-      toast.error(error?.message || "Invalid credentials");
+    setLoading(true);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const user = Object.fromEntries(formData.entries());
+
+      const { data, error } = await authClient.signUp.email({
+        name: user?.name,
+        email: user?.email,
+        password: user?.password,
+        role: user?.role || "attendee",
+        image: user?.image,
+      });
+
+      if (data) {
+        toast.success("Account created successfully! Now you can login");
+        router.push("/login");
+      }
+      if (error) {
+        toast.error(error?.message || "Invalid credentials");
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -179,11 +187,22 @@ export default function SignUpPage() {
           {/* BUTTON */}
           <motion.div
             variants={fadeUp}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={{ scale: loading ? 1 : 1.02 }}
+            whileTap={{ scale: loading ? 1 : 0.98 }}
           >
-            <Button type="submit" className="w-full mt-5 bg-indigo-600">
-              Signup
+            <Button
+              type="submit"
+              isDisabled={loading}
+              className="w-full mt-5 bg-indigo-600 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Signing up...
+                </>
+              ) : (
+                "Signup"
+              )}
             </Button>
           </motion.div>
         </Form>
