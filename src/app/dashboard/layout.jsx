@@ -36,12 +36,14 @@ const roleNavItems = {
   ],
   organizer: [
     { label: "Overview", href: "/dashboard/organizer/overview", icon: LayoutDashboard },
+    { label: "Profile Update", href: "/dashboard/organizer/profile", icon: User },
     { label: "Manage Events", href: "/dashboard/organizer/events", icon: Calendar },
     { label: "Add Event", href: "/dashboard/organizer/add-event", icon: PlusCircle },
     { label: "Organization Settings", href: "/dashboard/organizer/settings", icon: Settings },
   ],
   admin: [
     { label: "Platform Overview", href: "/dashboard/admin/overview", icon: LayoutDashboard },
+    { label: "Profile Update", href: "/dashboard/admin/profile", icon: User },
     { label: "User Management", href: "/dashboard/admin/users", icon: Users },
     { label: "Event Moderation", href: "/dashboard/admin/events", icon: ShieldCheck },
     { label: "Transaction History", href: "/dashboard/admin/transactions", icon: Receipt },
