@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import {
   Button,
   Fieldset,
@@ -12,20 +13,21 @@ import { motion } from "framer-motion";
 import { Eye } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { BsEyeSlash } from "react-icons/bs";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 export default function LoginPage() {
   const [isVisible, setIsVisible] = useState(false);
+  const router = useRouter();
 
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const user = Object.fromEntries(formData.entries());
 
-    console.log(user, "login data");
-    // Handle authClient.signIn.email or other authentication logic here
   };
 
   const container = {
@@ -67,7 +69,7 @@ export default function LoginPage() {
       >
         {/* TITLE */}
         <motion.h1 variants={fadeUp} className="text-2xl font-bold text-center mb-6">
-          Sign in to your account
+          Login to your account
         </motion.h1>
         <Form onSubmit={onSubmit}>
           <Fieldset.Group className="space-y-4">

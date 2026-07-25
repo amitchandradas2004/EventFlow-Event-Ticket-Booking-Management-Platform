@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import {
   Button,
   Fieldset,
@@ -14,49 +15,38 @@ import { motion } from "framer-motion";
 import { Eye } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { BsEyeSlash } from "react-icons/bs";
 import { FaCamera, FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import toast from "react-hot-toast";
 
 export default function SignUpPage() {
-  const [image, setImage] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [role, setRole] = useState("attendee");
+  const router = useRouter();
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const user = Object.fromEntries(formData.entries());
-
-    console.log(user, "userdata");
-
-    // const uploadedImage = await imageUpload(user.image);
-    // const plan = role === "collaborator" ? "collaborator_free" : "founder_free";
-    // const status = role === "collaborator" ? "active" : "active";
-    // const plan = "free";
-    // const status = "active";
-
-    // const { data, error } = await authClient.signUp.email({
-    //   ...user,
-    //   image: uploadedImage.url,
-    //   role,
-    //   plan,
-    //   status,
-    // });
-
-    // if (data) {
-    //   toast.success(`${user.name} account created successfully`);
-    //   redirect("/");
-    // }
-
-    // if (error) {
-    //   toast.error(error?.message);
-    // }
+    console.log(user)
+    const { data, error } = await authClient.signUp.email({
+      name: user?.name,
+      email: user?.email,
+      password: user?.password,
+      role: user?.role || "attendee",
+      image: user?.image,
+    })
+    console.log(data, error);
+    if (data) {
+      toast.success("Account created successfully! Now you can login");
+      router.push("/login");
+    }
+    if (error) {
+      toast.error(error?.message || "Invalid credentials");
+    }
   };
-  // const handleGoogleSignIn = async () => {
-  //   const data = await authClient.signUp.social({
-  //     provider: "google",
-  //   });
-  // };
+
 
   const container = {
     hidden: {},
