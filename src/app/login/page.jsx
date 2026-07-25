@@ -10,7 +10,7 @@ import {
   TextField,
 } from "@heroui/react";
 import { motion } from "framer-motion";
-import { Eye, Loader2 } from "lucide-react";
+import { Eye, Loader2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -20,9 +20,17 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const handleDemoFill = () => {
+    setEmail("demouser@gmail.com");
+    setPassword("demouser1234");
+    toast.success("Demo credentials filled!");
+  };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -30,9 +38,12 @@ export default function LoginPage() {
     try {
       const formData = new FormData(e.currentTarget);
       const user = Object.fromEntries(formData.entries());
+      const emailToUse = user.email || email;
+      const passwordToUse = user.password || password;
+
       const { data, error } = await authClient.signIn.email({
-        email: user.email,
-        password: user.password,
+        email: emailToUse,
+        password: passwordToUse,
       });
       if (data) {
         toast.success("Logged in successfully!");
@@ -47,13 +58,15 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
   const handleGoogleSignIn = async () => {
-    const data = await authClient.signIn.social({
+    await authClient.signIn.social({
       provider: "google",
       isBlocked: false,
       isPremium: false,
     });
   };
+
   const container = {
     hidden: {},
     show: {
@@ -95,6 +108,7 @@ export default function LoginPage() {
         <motion.h1 variants={fadeUp} className="text-2xl font-bold text-center mb-6">
           Login to your account
         </motion.h1>
+
         <Form onSubmit={onSubmit}>
           <Fieldset.Group className="space-y-4">
             {/* EMAIL */}
@@ -105,7 +119,11 @@ export default function LoginPage() {
                   <InputGroup.Prefix>
                     <FaEnvelope />
                   </InputGroup.Prefix>
-                  <InputGroup.Input placeholder="john@example.com" />
+                  <InputGroup.Input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="john@example.com"
+                  />
                 </InputGroup>
               </TextField>
             </motion.div>
@@ -121,6 +139,8 @@ export default function LoginPage() {
 
                   <InputGroup.Input
                     type={isVisible ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
                   />
 
@@ -132,7 +152,7 @@ export default function LoginPage() {
             </motion.div>
           </Fieldset.Group>
 
-          {/* BUTTON */}
+          {/* LOGIN SUBMIT BUTTON */}
           <motion.div
             variants={fadeUp}
             whileHover={{ scale: loading ? 1 : 1.02 }}
@@ -152,6 +172,23 @@ export default function LoginPage() {
                 "Login"
               )}
             </Button>
+          </motion.div>
+
+          {/* DEMO USER QUICK FILL BUTTON */}
+          <motion.div variants={fadeUp} className="mt-3">
+            <button
+              type="button"
+              onClick={handleDemoFill}
+              className="w-full flex items-center justify-between px-4 py-2.5 rounded-full bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 text-slate-700 dark:text-slate-200 transition-all cursor-pointer shadow-xs group"
+            >
+              <div className="flex items-center gap-2 text-xs font-semibold">
+                <Sparkles size={14} className="text-indigo-600 dark:text-indigo-400" />
+                <span>Demo User (Attendee)</span>
+              </div>
+              <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2.5 py-0.5 rounded-full border border-indigo-200/60 dark:border-indigo-800/50 group-hover:bg-indigo-600 group-hover:text-white transition">
+                Auto Fill
+              </span>
+            </button>
           </motion.div>
         </Form>
 

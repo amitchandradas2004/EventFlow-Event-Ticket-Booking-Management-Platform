@@ -21,7 +21,6 @@ export default async function AdminProfilePage() {
         <h1 className="text-2xl font-bold tracking-tight">Admin Profile</h1>
         <p className="text-slate-500 dark:text-slate-400">View and manage your administrator profile information.</p>
       </div>
-
       <ProfileCard user={user} />
     </div>
   );
