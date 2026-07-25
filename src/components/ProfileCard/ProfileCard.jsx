@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Calendar, CheckCircle2, Crown, Edit3, Mail, ShieldAlert, ShieldCheck, User as UserIcon } from "lucide-react";
+import { Calendar, CheckCircle2, Crown, Edit3, Mail, ShieldAlert, ShieldCheck, User as UserIcon, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import UpdateProfileForm from "@/components/Profile/UpdateProfileForm";
 
 export default function ProfileCard({ user, onUpdate, className = "" }) {
   const [showDemoModal, setShowDemoModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   if (!user) return null;
 
@@ -28,8 +30,8 @@ export default function ProfileCard({ user, onUpdate, className = "" }) {
   const handleUpdateClick = (e) => {
     if (isDemoUser) {
       setShowDemoModal(true);
-    } else if (onUpdate) {
-      onUpdate(e);
+    } else {
+      setShowUpdateModal(true);
     }
   };
 
@@ -44,7 +46,7 @@ export default function ProfileCard({ user, onUpdate, className = "" }) {
         {/* Top Gradient Decorative Banner */}
         <div className="relative h-28 sm:h-36 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-6">
           <div className="absolute inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-[2px]" />
-          
+
           {/* Top Badges */}
           <div className="relative z-10 flex items-center justify-end gap-2">
             {isPremium && (
@@ -185,6 +187,50 @@ export default function ProfileCard({ user, onUpdate, className = "" }) {
           </div>
         </div>
       </motion.div>
+
+      {/* Non-Demo User Update Profile Modal */}
+      <AnimatePresence>
+        {showUpdateModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowUpdateModal(false)}
+              className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
+            />
+
+            {/* Modal Box */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ type: "spring", duration: 0.3, bounce: 0.2 }}
+              className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 z-10 space-y-4 max-h-[90vh] overflow-y-auto"
+            >
+              {/* Close Icon Button */}
+              <button
+                onClick={() => setShowUpdateModal(false)}
+                className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X size={18} />
+              </button>
+
+              <UpdateProfileForm
+                user={user}
+                inModal={true}
+                onClose={() => setShowUpdateModal(false)}
+                onSubmit={async (data) => {
+                  if (onUpdate) await onUpdate(data);
+                  setShowUpdateModal(false);
+                }}
+              />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Demo User Restriction Modal */}
       <AnimatePresence>
