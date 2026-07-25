@@ -137,18 +137,22 @@ export default function SignUpPage() {
             <motion.div variants={fadeUp}>
               <TextField isRequired name="password" type="password">
                 <Label>Password</Label>
-                <InputGroup className="rounded-full overflow-hidden">
-                  <InputGroup.Prefix>
+                <InputGroup className="rounded-full overflow-hidden flex items-center">
+                  <InputGroup.Prefix className="pl-3.5 pr-1 text-slate-400">
                     <FaLock />
                   </InputGroup.Prefix>
 
                   <InputGroup.Input
                     type={isVisible ? "text" : "password"}
                     placeholder="Enter password"
+                    className="pr-5"
                   />
 
-                  <InputGroup.Suffix onClick={() => setIsVisible(!isVisible)}>
-                    {isVisible ? <BsEyeSlash /> : <Eye />}
+                  <InputGroup.Suffix
+                    onClick={() => setIsVisible(!isVisible)}
+                    className="pr-5 sm:pr-6 pl-2 shrink-0 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-300 cursor-pointer transition z-10 flex items-center justify-center select-none"
+                  >
+                    {isVisible ? <BsEyeSlash size={18} /> : <Eye size={18} />}
                   </InputGroup.Suffix>
                 </InputGroup>
               </TextField>
