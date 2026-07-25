@@ -60,6 +60,12 @@ export default function Navbar({
     }
   };
 
+  const navItems = user
+    ? items.some((i) => i.href === "/dashboard")
+      ? items
+      : [...items, { label: "Dashboard", href: "/dashboard" }]
+    : items;
+
   const defaultRightContent = (
     <>
       {isPending ? (
@@ -69,7 +75,7 @@ export default function Navbar({
         </div>
       ) : user ? (
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
             <div className="h-6 w-6 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center text-xs font-bold uppercase shadow-xs">
               {user.name ? user.name.charAt(0) : <UserIcon size={12} />}
             </div>
@@ -138,7 +144,7 @@ export default function Navbar({
 
         {/* Desktop Navigation Segmented Pill (Large Devices) */}
         <ul className="hidden items-center gap-1 lg:flex bg-slate-100/80 dark:bg-slate-800/50 p-1 rounded-full border border-slate-200/50 dark:border-slate-700/50">
-          {items?.map((item) => {
+          {navItems?.map((item) => {
             const isActive = item.isActive !== undefined ? item.isActive : pathname === item.href;
             return (
               <li key={item.href}>
@@ -192,7 +198,7 @@ export default function Navbar({
             )}
           >
             <ul className="space-y-1.5">
-              {items?.map((item) => {
+              {navItems?.map((item) => {
                 const isActive = item.isActive !== undefined ? item.isActive : pathname === item.href;
                 return (
                   <li key={item.href}>
