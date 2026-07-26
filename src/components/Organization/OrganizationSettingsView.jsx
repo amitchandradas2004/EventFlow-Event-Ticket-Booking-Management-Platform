@@ -29,6 +29,12 @@ export default function OrganizationSettingsView({
     setView("table");
   };
 
+  const handleUpdateOrganization = (updatedOrg) => {
+    setOrganizations((prev) =>
+      prev.map((org) => (org._id === updatedOrg._id ? { ...org, ...updatedOrg } : org))
+    );
+  };
+
   const handleDeleteOrganization = (deletedId) => {
     setOrganizations((prev) => prev.filter((org) => org._id !== deletedId));
     setPagination((prev) => {
@@ -113,6 +119,7 @@ export default function OrganizationSettingsView({
           itemsPerPage={pagination.limit}
           onPageChange={handlePageChange}
           onDeleteOrganization={handleDeleteOrganization}
+          onUpdateOrganization={handleUpdateOrganization}
         />
       ) : (
         <AddOrganizationForm

@@ -16,11 +16,11 @@ import {
   ChevronLeft,
   ChevronRight,
   AlertTriangle,
-  Loader2,
-  X
+  Loader2
 } from "lucide-react";
 import toast from "react-hot-toast";
 import OrganizationDetailsModal from "./OrganizationDetailsModal";
+import EditOrganizationModal from "./EditOrganizationModal";
 import { deleteOrganizationById } from "@/lib/actions/organization";
 
 export default function OrganizationTable({
@@ -30,11 +30,16 @@ export default function OrganizationTable({
   totalPages = 1,
   itemsPerPage = 10,
   onPageChange,
-  onDeleteOrganization
+  onDeleteOrganization,
+  onUpdateOrganization
 }) {
   const [imageErrors, setImageErrors] = useState({});
   const [selectedOrg, setSelectedOrg] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Edit state
+  const [orgToEdit, setOrgToEdit] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Deletion state
   const [orgToDelete, setOrgToDelete] = useState(null);
@@ -54,6 +59,22 @@ export default function OrganizationTable({
     setSelectedOrg(null);
   };
 
+  const handleOpenEdit = (org) => {
+    setOrgToEdit(org);
+    setIsEditModalOpen(true);
+  };
+
+  const handleCloseEdit = () => {
+    setIsEditModalOpen(false);
+    setOrgToEdit(null);
+  };
+
+  const handleUpdateSuccess = (updatedOrg) => {
+    if (onUpdateOrganization) {
+      onUpdateOrganization(updatedOrg);
+    }
+  };
+
   const handleConfirmDelete = async () => {
     if (!orgToDelete?._id) {
       toast.error("Organization ID missing");
@@ -69,7 +90,6 @@ export default function OrganizationTable({
       }
       setOrgToDelete(null);
     } catch (err) {
-
       toast.error(err?.message || "Failed to delete organization");
     } finally {
       setDeleting(false);
@@ -232,6 +252,7 @@ export default function OrganizationTable({
                             <button
                               type="button"
                               title="Edit organization"
+                              onClick={() => handleOpenEdit(org)}
                               className="p-2 rounded-xl text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/50 transition cursor-pointer"
                             >
                               <Edit size={16} />
@@ -280,10 +301,11 @@ export default function OrganizationTable({
                       key={p}
                       type="button"
                       onClick={() => onPageChange && onPageChange(p)}
-                      className={`w-8 h-8 rounded-xl font-semibold transition cursor-pointer flex items-center justify-center ${p === currentPage
+                      className={`w-8 h-8 rounded-xl font-semibold transition cursor-pointer flex items-center justify-center ${
+                        p === currentPage
                           ? "bg-indigo-600 text-white shadow-xs"
                           : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-                        }`}
+                      }`}
                     >
                       {p}
                     </button>
@@ -311,6 +333,14 @@ export default function OrganizationTable({
         organization={selectedOrg}
         isOpen={isModalOpen}
         onClose={handleCloseDetails}
+      />
+
+      {/* EDIT MODAL */}
+      <EditOrganizationModal
+        organization={orgToEdit}
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEdit}
+        onUpdateSuccess={handleUpdateSuccess}
       />
 
       {/* CONFIRMATION DELETE MODAL */}

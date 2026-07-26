@@ -48,3 +48,19 @@ export const deleteOrganizationById = async (id) => {
     revalidatePath("/dashboard/organizer/settings");
     return result;
 };
+
+export const updateOrganizationById = async (id, data) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/organization/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (!res.ok) {
+        throw new Error(result.message);
+    }
+    revalidatePath("/dashboard/organizer/settings");
+    return result;
+};
