@@ -43,7 +43,6 @@ export default function UpdateProfileForm({
       toast.success("Profile updated successfully!");
       if (onClose) onClose();
     } catch (err) {
-      console.error('Error:', err);
       toast.error(err.message || "Failed to update profile");
     } finally {
       setLoading(false);

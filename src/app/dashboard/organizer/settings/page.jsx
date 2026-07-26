@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import OrganizationSettingsView from "@/components/Organization/OrganizationSettingsView";
 import { getOrganizationByUserEmail } from "@/lib/actions/organization";
+import toast from "react-hot-toast";
 
 export default async function OrganizerSettingsPage() {
   const session = await auth.api.getSession({
@@ -38,7 +39,7 @@ export default async function OrganizerSettingsPage() {
         paginationInfo.totalPages = 1;
       }
     } catch (err) {
-      console.error("Failed to fetch organization by user email:", err);
+      toast.error(err.message || "Failed to fetch organization by user email");
     }
   }
 

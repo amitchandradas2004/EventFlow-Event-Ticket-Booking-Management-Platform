@@ -31,7 +31,6 @@ export const updateUserInfo = async ({ email, name, image }) => {
         const data = await res.json();
         return data;
     } catch (error) {
-        console.error('Update error:', error);
         throw error;
     }
 };

@@ -29,6 +29,18 @@ export default function OrganizationSettingsView({
     setView("table");
   };
 
+  const handleDeleteOrganization = (deletedId) => {
+    setOrganizations((prev) => prev.filter((org) => org._id !== deletedId));
+    setPagination((prev) => {
+      const newTotal = Math.max(0, prev.total - 1);
+      return {
+        ...prev,
+        total: newTotal,
+        totalPages: Math.ceil(newTotal / prev.limit) || 1
+      };
+    });
+  };
+
   const handlePageChange = async (newPage) => {
     if (newPage === pagination.page || newPage < 1 || newPage > pagination.totalPages) return;
 
@@ -44,7 +56,6 @@ export default function OrganizationSettingsView({
         });
       }
     } catch (err) {
-      console.error("Error fetching page:", err);
     }
   };
 
@@ -101,6 +112,7 @@ export default function OrganizationSettingsView({
           totalPages={pagination.totalPages}
           itemsPerPage={pagination.limit}
           onPageChange={handlePageChange}
+          onDeleteOrganization={handleDeleteOrganization}
         />
       ) : (
         <AddOrganizationForm

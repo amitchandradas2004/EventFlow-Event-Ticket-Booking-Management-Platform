@@ -33,3 +33,18 @@ export const getOrganizationByUserEmail = async (email, page = 1, limit = 10) =>
     }
     return result;
 };
+
+export const deleteOrganizationById = async (id) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/organization/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    const result = await res.json();
+    if (!res.ok) {
+        throw new Error(result.message);
+    }
+    revalidatePath("/dashboard/organizer/settings");
+    return result;
+};

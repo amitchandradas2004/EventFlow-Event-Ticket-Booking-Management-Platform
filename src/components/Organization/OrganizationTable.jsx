@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Building2,
   Globe,
@@ -11,11 +11,17 @@ import {
   XCircle,
   Eye,
   Edit,
+  Trash2,
   Inbox,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  AlertTriangle,
+  Loader2,
+  X
 } from "lucide-react";
+import toast from "react-hot-toast";
 import OrganizationDetailsModal from "./OrganizationDetailsModal";
+import { deleteOrganizationById } from "@/lib/actions/organization";
 
 export default function OrganizationTable({
   organizations = [],
@@ -23,11 +29,16 @@ export default function OrganizationTable({
   currentPage = 1,
   totalPages = 1,
   itemsPerPage = 10,
-  onPageChange
+  onPageChange,
+  onDeleteOrganization
 }) {
   const [imageErrors, setImageErrors] = useState({});
   const [selectedOrg, setSelectedOrg] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Deletion state
+  const [orgToDelete, setOrgToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const handleImageError = (id) => {
     setImageErrors((prev) => ({ ...prev, [id]: true }));
@@ -41,6 +52,28 @@ export default function OrganizationTable({
   const handleCloseDetails = () => {
     setIsModalOpen(false);
     setSelectedOrg(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!orgToDelete?._id) {
+      toast.error("Organization ID missing");
+      return;
+    }
+
+    setDeleting(true);
+    try {
+      await deleteOrganizationById(orgToDelete._id);
+      toast.success("Organization deleted successfully!");
+      if (onDeleteOrganization) {
+        onDeleteOrganization(orgToDelete._id);
+      }
+      setOrgToDelete(null);
+    } catch (err) {
+
+      toast.error(err?.message || "Failed to delete organization");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const getStatusBadge = (status) => {
@@ -203,6 +236,14 @@ export default function OrganizationTable({
                             >
                               <Edit size={16} />
                             </button>
+                            <button
+                              type="button"
+                              title="Delete organization"
+                              onClick={() => setOrgToDelete(org)}
+                              className="p-2 rounded-xl text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition cursor-pointer"
+                            >
+                              <Trash2 size={16} />
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -239,11 +280,10 @@ export default function OrganizationTable({
                       key={p}
                       type="button"
                       onClick={() => onPageChange && onPageChange(p)}
-                      className={`w-8 h-8 rounded-xl font-semibold transition cursor-pointer flex items-center justify-center ${
-                        p === currentPage
+                      className={`w-8 h-8 rounded-xl font-semibold transition cursor-pointer flex items-center justify-center ${p === currentPage
                           ? "bg-indigo-600 text-white shadow-xs"
                           : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-                      }`}
+                        }`}
                     >
                       {p}
                     </button>
@@ -266,12 +306,94 @@ export default function OrganizationTable({
         )}
       </motion.div>
 
-      {/* ORGANIZATION DETAILS MODAL */}
+      {/* DETAILS MODAL */}
       <OrganizationDetailsModal
         organization={selectedOrg}
         isOpen={isModalOpen}
         onClose={handleCloseDetails}
       />
+
+      {/* CONFIRMATION DELETE MODAL */}
+      <AnimatePresence>
+        {orgToDelete && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => !deleting && setOrgToDelete(null)}
+              className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
+            />
+
+            {/* Modal Container */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: "spring", duration: 0.3, bounce: 0.2 }}
+              className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 shadow-2xl border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 z-10 space-y-5"
+            >
+              {/* Header Icon & Title */}
+              <div className="flex items-center gap-3.5">
+                <div className="rounded-2xl bg-rose-100 dark:bg-rose-950/60 p-3 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/50 shrink-0">
+                  <AlertTriangle size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                    Delete Organization
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    This action cannot be undone
+                  </p>
+                </div>
+              </div>
+
+              {/* Message */}
+              <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200/60 dark:border-slate-700/50 space-y-1">
+                <p>
+                  Are you sure you want to delete{" "}
+                  <strong className="text-slate-900 dark:text-white font-semibold">
+                    "{orgToDelete.organizationName || "this organization"}"
+                  </strong>
+                  ?
+                </p>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-end gap-2.5 pt-1">
+                <button
+                  type="button"
+                  disabled={deleting}
+                  onClick={() => setOrgToDelete(null)}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold text-sm transition border border-slate-200 dark:border-slate-700 cursor-pointer disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="button"
+                  disabled={deleting}
+                  onClick={handleConfirmDelete}
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-md shadow-rose-500/20 transition cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {deleting ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      <span>Deleting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 size={16} />
+                      <span>Delete Organization</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

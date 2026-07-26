@@ -50,14 +50,12 @@ export default function AddOrganizationForm({ initialEmail = "", onSubmitSuccess
       // Simulate form submission delay or API call
       await new Promise((resolve) => setTimeout(resolve, 800));
       const result = await addOrganization(submissionData);
-      console.log(result);
 
       toast.success("Organization application submitted successfully! Status set to pending.");
       if (onSubmitSuccess) {
         onSubmitSuccess(submissionData);
       }
     } catch (err) {
-      console.error(err);
       toast.error(err?.message || "Failed to submit organization application");
     } finally {
       setLoading(false);
