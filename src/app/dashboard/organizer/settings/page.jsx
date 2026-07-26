@@ -1,25 +1,52 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import AddOrganizationForm from "@/components/Organization/AddOrganizationForm";
+import OrganizationSettingsView from "@/components/Organization/OrganizationSettingsView";
+import { getOrganizationByUserEmail } from "@/lib/actions/organization";
 
 export default async function OrganizerSettingsPage() {
   const session = await auth.api.getSession({
     headers: await headers()
   });
 
-  return (
-    <div className="space-y-6 max-w-6xl mx-auto">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-          Organization Settings
-        </h1>
-        <p className="text-slate-500 dark:text-slate-400">
-          Manage your organization profile, submission details, and status preferences.
-        </p>
-      </div>
+  const email = session?.user?.email || "";
+  let initialOrganizations = [];
+  let paginationInfo = {
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 1
+  };
 
-      <AddOrganizationForm initialEmail={session?.user?.email || ""} />
-    </div>
+  if (email) {
+    try {
+      const response = await getOrganizationByUserEmail(email, 1, 10);
+      if (response?.result && Array.isArray(response.result)) {
+        initialOrganizations = response.result;
+        paginationInfo = {
+          total: response.total ?? response.result.length,
+          page: response.page || 1,
+          limit: response.limit || 10,
+          totalPages: response.totalPages || 1
+        };
+      } else if (Array.isArray(response)) {
+        initialOrganizations = response;
+        paginationInfo.total = response.length;
+        paginationInfo.totalPages = Math.ceil(response.length / 10) || 1;
+      } else if (response && !response.error && response._id) {
+        initialOrganizations = [response];
+        paginationInfo.total = 1;
+        paginationInfo.totalPages = 1;
+      }
+    } catch (err) {
+      console.error("Failed to fetch organization by user email:", err);
+    }
+  }
+
+  return (
+    <OrganizationSettingsView
+      initialEmail={email}
+      initialOrganizations={initialOrganizations}
+      initialPagination={paginationInfo}
+    />
   );
 }
-

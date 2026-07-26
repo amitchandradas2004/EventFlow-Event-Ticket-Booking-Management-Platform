@@ -17,3 +17,19 @@ export const addOrganization = async (data) => {
     revalidatePath("/dashboard/organizer/settings");
     return result;
 }
+
+
+export const getOrganizationByUserEmail = async (email, page = 1, limit = 10) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/organization/${email}?page=${page}&limit=${limit}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        cache: "no-store"
+    });
+    const result = await res.json();
+    if (!res.ok) {
+        throw new Error(result.message);
+    }
+    return result;
+};
