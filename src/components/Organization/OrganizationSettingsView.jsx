@@ -15,6 +15,7 @@ export default function OrganizationSettingsView({
   const [view, setView] = useState("table");
   const [organizations, setOrganizations] = useState(initialOrganizations);
   const [pagination, setPagination] = useState(initialPagination);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOrganizationAdded = (newOrg) => {
     setOrganizations((prev) => [newOrg, ...prev]);
@@ -48,9 +49,10 @@ export default function OrganizationSettingsView({
   };
 
   const handlePageChange = async (newPage) => {
-    if (newPage === pagination.page || newPage < 1 || newPage > pagination.totalPages) return;
+    if (newPage === pagination.page || newPage < 1 || newPage > pagination.totalPages || isLoading) return;
 
     try {
+      setIsLoading(true);
       const response = await getOrganizationByUserEmail(initialEmail, newPage, pagination.limit);
       if (response?.result && Array.isArray(response.result)) {
         setOrganizations(response.result);
@@ -62,6 +64,9 @@ export default function OrganizationSettingsView({
         });
       }
     } catch (err) {
+      toast.error(err?.message || "Failed to load page data");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -117,6 +122,7 @@ export default function OrganizationSettingsView({
           currentPage={pagination.page}
           totalPages={pagination.totalPages}
           itemsPerPage={pagination.limit}
+          isLoading={isLoading}
           onPageChange={handlePageChange}
           onDeleteOrganization={handleDeleteOrganization}
           onUpdateOrganization={handleUpdateOrganization}
