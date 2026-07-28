@@ -7,6 +7,48 @@ import Image from "next/image";
 import Link from "next/link";
 import UpdateProfileForm from "@/components/Profile/UpdateProfileForm";
 
+const bannerPalettes = [
+  {
+    light: "from-indigo-600 via-violet-600 to-purple-600",
+    dark: "dark:from-indigo-950 dark:via-purple-950 dark:to-slate-950",
+  },
+  {
+    light: "from-cyan-500 via-blue-600 to-indigo-600",
+    dark: "dark:from-cyan-950 dark:via-blue-950 dark:to-indigo-950",
+  },
+  {
+    light: "from-emerald-500 via-teal-600 to-cyan-600",
+    dark: "dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950",
+  },
+  {
+    light: "from-rose-500 via-pink-600 to-purple-600",
+    dark: "dark:from-rose-950 dark:via-pink-950 dark:to-purple-950",
+  },
+  {
+    light: "from-amber-500 via-orange-600 to-rose-600",
+    dark: "dark:from-amber-950 dark:via-orange-950 dark:to-rose-950",
+  },
+  {
+    light: "from-violet-600 via-fuchsia-600 to-pink-600",
+    dark: "dark:from-violet-950 dark:via-fuchsia-950 dark:to-slate-900",
+  },
+  {
+    light: "from-sky-500 via-indigo-600 to-violet-600",
+    dark: "dark:from-sky-950 dark:via-indigo-950 dark:to-violet-950",
+  },
+];
+
+function getUserBannerClasses(user) {
+  const seed = String(user?.email || user?.name || user?.id || user?._id || "default");
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % bannerPalettes.length;
+  const palette = bannerPalettes[index];
+  return `bg-gradient-to-r ${palette.light} ${palette.dark}`;
+}
+
 export default function ProfileCard({ user, onUpdate, className = "" }) {
   const [showDemoModal, setShowDemoModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -35,6 +77,8 @@ export default function ProfileCard({ user, onUpdate, className = "" }) {
     }
   };
 
+  const bannerClasses = getUserBannerClasses(user);
+
   return (
     <>
       <motion.div
@@ -44,7 +88,7 @@ export default function ProfileCard({ user, onUpdate, className = "" }) {
         className={`w-full overflow-hidden rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 shadow-xl backdrop-blur-xl transition-all ${className}`}
       >
         {/* Top Gradient Decorative Banner */}
-        <div className="relative h-28 sm:h-36 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 p-6">
+        <div className={`relative h-28 sm:h-36 ${bannerClasses} p-6 transition-colors duration-500`}>
           <div className="absolute inset-0 bg-white/10 dark:bg-black/10 backdrop-blur-[2px]" />
 
           {/* Top Badges */}

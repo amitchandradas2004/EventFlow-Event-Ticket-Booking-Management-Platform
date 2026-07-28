@@ -9,6 +9,7 @@ import { useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
+import LogoutModal from "@/components/Modals/LogoutModal";
 
 const defaultItems = [
   { label: "Home", href: "/" },
@@ -47,16 +48,22 @@ export default function Navbar({
   position = "fixed",
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
-  const handleLogout = async () => {
+  const handleConfirmLogout = async () => {
     try {
+      setIsLoggingOut(true);
       await authClient.signOut();
       toast.success("Logged out successfully");
+      setShowLogoutModal(false);
     } catch (err) {
       toast.error("Failed to sign out");
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -65,6 +72,9 @@ export default function Navbar({
       ? items
       : [...items, { label: "Dashboard", href: "/dashboard" }]
     : items;
+
+  const userRole = (user?.role || "attendee").toLowerCase();
+  const profileHref = `/dashboard/${userRole}/profile`;
 
   const defaultRightContent = (
     <>
@@ -75,18 +85,23 @@ export default function Navbar({
         </div>
       ) : user ? (
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60">
-            <div className="h-6 w-6 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center text-xs font-bold uppercase shadow-xs">
+          <Link
+            href={profileHref}
+            onClick={() => setIsMenuOpen(false)}
+            title="View Profile"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:border-indigo-200 dark:hover:border-indigo-800/50 transition cursor-pointer group"
+          >
+            <div className="h-6 w-6 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center text-xs font-bold uppercase shadow-xs group-hover:scale-105 transition-transform">
               {user.name ? user.name.charAt(0) : <UserIcon size={12} />}
             </div>
-            <span className="text-xs font-medium text-slate-700 dark:text-slate-200 max-w-[120px] truncate hidden sm:inline-block">
+            <span className="text-xs font-medium text-slate-700 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 max-w-[120px] truncate hidden sm:inline-block transition-colors">
               {user.name || user.email}
             </span>
-          </div>
+          </Link>
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
-            onClick={handleLogout}
+            onClick={() => setShowLogoutModal(true)}
             className="rounded-full px-3.5 py-1.5 text-xs font-medium bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 border border-red-200/70 dark:border-red-900/40 hover:bg-red-600 hover:text-white dark:hover:bg-red-600 dark:hover:text-white shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <LogOut size={14} />
@@ -224,6 +239,13 @@ export default function Navbar({
           </motion.div>
         )}
       </AnimatePresence>
+
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleConfirmLogout}
+        isLoggingOut={isLoggingOut}
+      />
     </nav>
   );
 }

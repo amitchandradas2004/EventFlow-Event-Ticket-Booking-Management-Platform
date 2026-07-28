@@ -24,11 +24,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isDemoFilled, setIsDemoFilled] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
 
   const handleDemoFill = () => {
+    if (isDemoFilled) return;
     setEmail("demouser@gmail.com");
     setPassword("demouser1234");
+    setIsDemoFilled(true);
     toast.success("Demo credentials filled!");
   };
 
@@ -60,11 +64,18 @@ export default function LoginPage() {
   };
 
   const handleGoogleSignIn = async () => {
-    await authClient.signIn.social({
-      provider: "google",
-      isBlocked: false,
-      isPremium: false,
-    });
+    if (googleLoading || loading) return;
+    setGoogleLoading(true);
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        isBlocked: false,
+        isPremium: false,
+      });
+    } catch (err) {
+      toast.error("Google login failed");
+      setGoogleLoading(false);
+    }
   };
 
   const container = {
@@ -130,10 +141,10 @@ export default function LoginPage() {
 
             {/* PASSWORD */}
             <motion.div variants={fadeUp}>
-              <TextField isRequired name="password" type="password">
+              <TextField isRequired name="password">
                 <Label>Password</Label>
-                <InputGroup className="rounded-full overflow-hidden flex items-center">
-                  <InputGroup.Prefix className="pl-3.5 pr-1 text-slate-400">
+                <InputGroup className="rounded-full overflow-hidden flex items-center relative">
+                  <InputGroup.Prefix className="pl-3.5 pr-1 text-slate-400 shrink-0">
                     <FaLock />
                   </InputGroup.Prefix>
 
@@ -142,14 +153,18 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter password"
-                    className="pr-5"
+                    className="pr-2 w-full"
                   />
 
-                  <InputGroup.Suffix
-                    onClick={() => setIsVisible(!isVisible)}
-                    className="pr-5 sm:pr-6 pl-2 shrink-0 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-300 cursor-pointer transition z-10 flex items-center justify-center select-none"
-                  >
-                    {isVisible ? <BsEyeSlash size={18} /> : <Eye size={18} />}
+                  <InputGroup.Suffix className="pr-3 pl-1 shrink-0 z-10 flex items-center justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setIsVisible(!isVisible)}
+                      className="p-1 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-300 transition cursor-pointer flex items-center justify-center rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-700/50"
+                      aria-label={isVisible ? "Hide password" : "Show password"}
+                    >
+                      {isVisible ? <BsEyeSlash size={18} /> : <Eye size={18} />}
+                    </button>
                   </InputGroup.Suffix>
                 </InputGroup>
               </TextField>
@@ -182,15 +197,20 @@ export default function LoginPage() {
           <motion.div variants={fadeUp} className="mt-3">
             <button
               type="button"
+              disabled={isDemoFilled}
               onClick={handleDemoFill}
-              className="w-full flex items-center justify-between px-4 py-2.5 rounded-full bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 text-slate-700 dark:text-slate-200 transition-all cursor-pointer shadow-xs group"
+              className="w-full flex items-center justify-between px-4 py-2.5 rounded-full bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 text-slate-700 dark:text-slate-200 transition-all cursor-pointer shadow-xs group disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-slate-100/90 dark:disabled:hover:bg-slate-800/80"
             >
               <div className="flex items-center gap-2 text-xs font-semibold">
-                <Sparkles size={14} className="text-indigo-600 dark:text-indigo-400" />
+                <Sparkles size={14} className={isDemoFilled ? "text-slate-400" : "text-indigo-600 dark:text-indigo-400"} />
                 <span>Demo User (Attendee)</span>
               </div>
-              <span className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2.5 py-0.5 rounded-full border border-indigo-200/60 dark:border-indigo-800/50 group-hover:bg-indigo-600 group-hover:text-white transition">
-                Auto Fill
+              <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border transition ${
+                isDemoFilled
+                  ? "text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 border-emerald-200/60 dark:border-emerald-800/50"
+                  : "text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 border-indigo-200/60 dark:border-indigo-800/50 group-hover:bg-indigo-600 group-hover:text-white"
+              }`}>
+                {isDemoFilled ? "Filled ✓" : "Auto Fill"}
               </span>
             </button>
           </motion.div>
@@ -220,13 +240,23 @@ export default function LoginPage() {
             />
           </div>
 
-          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+          <motion.div whileHover={{ scale: (googleLoading || loading) ? 1 : 1.03 }} whileTap={{ scale: (googleLoading || loading) ? 1 : 0.97 }}>
             <Button
               onClick={handleGoogleSignIn}
-              className="w-full rounded-full border hover:bg-indigo-600 transition"
+              isDisabled={googleLoading || loading}
+              className="w-full rounded-full border hover:bg-indigo-600 transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <FcGoogle size={20} />
-              Continue with Google
+              {googleLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Connecting to Google...</span>
+                </>
+              ) : (
+                <>
+                  <FcGoogle size={20} />
+                  <span>Continue with Google</span>
+                </>
+              )}
             </Button>
           </motion.div>
         </motion.div>

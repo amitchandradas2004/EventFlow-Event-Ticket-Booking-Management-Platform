@@ -26,6 +26,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ThemeToggle } from "@/components/Navbar/ThemeToggle";
+import LogoutModal from "@/components/Modals/LogoutModal";
 
 const roleNavItems = {
   attendee: [
@@ -59,6 +60,8 @@ const roleBadgeColors = {
 
 export default function DashboardLayout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -84,13 +87,17 @@ export default function DashboardLayout({ children }) {
     };
   }, [mobileOpen]);
 
-  const handleLogout = async () => {
+  const handleConfirmLogout = async () => {
     try {
+      setIsLoggingOut(true);
       await authClient.signOut();
       toast.success("Logged out successfully");
+      setShowLogoutModal(false);
       router.push("/login");
     } catch (err) {
       toast.error("Failed to sign out");
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -127,12 +134,17 @@ export default function DashboardLayout({ children }) {
         </div>
 
         {/* User Card */}
-        <div className="rounded-2xl bg-slate-100/80 dark:bg-slate-800/50 p-3.5 border border-slate-200/60 dark:border-slate-700/50 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
+        <Link
+          href={`/dashboard/${role}/profile`}
+          onClick={() => setMobileOpen(false)}
+          title="View Profile"
+          className="rounded-2xl bg-slate-100/80 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 p-3.5 border border-slate-200/60 dark:border-slate-700/50 hover:border-indigo-200 dark:hover:border-indigo-800/50 flex items-center gap-3 transition cursor-pointer group"
+        >
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0 group-hover:scale-105 transition-transform">
             {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">
+            <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 truncate transition-colors">
               {user?.name || "User"}
             </p>
             <span
@@ -144,7 +156,7 @@ export default function DashboardLayout({ children }) {
               {role}
             </span>
           </div>
-        </div>
+        </Link>
 
         {/* Dashboard Navigation Items */}
         <nav className="space-y-1">
@@ -219,7 +231,7 @@ export default function DashboardLayout({ children }) {
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.96 }}
-          onClick={handleLogout}
+          onClick={() => setShowLogoutModal(true)}
           className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 border border-red-200/70 dark:border-red-900/50 hover:bg-red-600 hover:text-white dark:hover:bg-red-600 dark:hover:text-white transition-all cursor-pointer shadow-xs"
         >
           <LogOut size={18} />
@@ -285,6 +297,13 @@ export default function DashboardLayout({ children }) {
           {children}
         </main>
       </div>
+
+      <LogoutModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleConfirmLogout}
+        isLoggingOut={isLoggingOut}
+      />
     </div>
   );
 }

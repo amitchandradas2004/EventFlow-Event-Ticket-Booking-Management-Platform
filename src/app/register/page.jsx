@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 export default function SignUpPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
 
   const onSubmit = async (e) => {
@@ -58,11 +59,18 @@ export default function SignUpPage() {
   };
 
   const handleGoogleSignIn = async () => {
-    const data = await authClient.signIn.social({
-      provider: "google",
-      isBlocked: false,
-      isPremium: false,
-    });
+    if (googleLoading || loading) return;
+    setGoogleLoading(true);
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        isBlocked: false,
+        isPremium: false,
+      });
+    } catch (err) {
+      toast.error("Google sign up failed");
+      setGoogleLoading(false);
+    }
   };
   const container = {
     hidden: {},
@@ -135,24 +143,28 @@ export default function SignUpPage() {
 
             {/* PASSWORD */}
             <motion.div variants={fadeUp}>
-              <TextField isRequired name="password" type="password">
+              <TextField isRequired name="password">
                 <Label>Password</Label>
-                <InputGroup className="rounded-full overflow-hidden flex items-center">
-                  <InputGroup.Prefix className="pl-3.5 pr-1 text-slate-400">
+                <InputGroup className="rounded-full overflow-hidden flex items-center relative">
+                  <InputGroup.Prefix className="pl-3.5 pr-1 text-slate-400 shrink-0">
                     <FaLock />
                   </InputGroup.Prefix>
 
                   <InputGroup.Input
                     type={isVisible ? "text" : "password"}
                     placeholder="Enter password"
-                    className="pr-5"
+                    className="pr-2 w-full"
                   />
 
-                  <InputGroup.Suffix
-                    onClick={() => setIsVisible(!isVisible)}
-                    className="pr-5 sm:pr-6 pl-2 shrink-0 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-300 cursor-pointer transition z-10 flex items-center justify-center select-none"
-                  >
-                    {isVisible ? <BsEyeSlash size={18} /> : <Eye size={18} />}
+                  <InputGroup.Suffix className="pr-3 pl-1 shrink-0 z-10 flex items-center justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setIsVisible(!isVisible)}
+                      className="p-1 text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-300 transition cursor-pointer flex items-center justify-center rounded-full hover:bg-slate-200/50 dark:hover:bg-slate-700/50"
+                      aria-label={isVisible ? "Hide password" : "Show password"}
+                    >
+                      {isVisible ? <BsEyeSlash size={18} /> : <Eye size={18} />}
+                    </button>
                   </InputGroup.Suffix>
                 </InputGroup>
               </TextField>
@@ -247,13 +259,23 @@ export default function SignUpPage() {
             />
           </div>
 
-          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+          <motion.div whileHover={{ scale: (googleLoading || loading) ? 1 : 1.03 }} whileTap={{ scale: (googleLoading || loading) ? 1 : 0.97 }}>
             <Button
               onClick={handleGoogleSignIn}
-              className="w-full rounded-full border hover:bg-indigo-600 transition"
+              isDisabled={googleLoading || loading}
+              className="w-full rounded-full border hover:bg-indigo-600 transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <FcGoogle size={20} />
-              Continue with Google
+              {googleLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Connecting to Google...</span>
+                </>
+              ) : (
+                <>
+                  <FcGoogle size={20} />
+                  <span>Continue with Google</span>
+                </>
+              )}
             </Button>
           </motion.div>
         </motion.div>

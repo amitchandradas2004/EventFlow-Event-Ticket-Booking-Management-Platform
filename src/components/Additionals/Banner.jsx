@@ -2,8 +2,12 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
 
 export default function Banner() {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+
   // Container animation to stagger the text layout elements
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -62,13 +66,23 @@ export default function Banner() {
             event seamlessly.
           </motion.p>
 
-          <motion.div variants={textVariants}>
-            <Link href="/register" className="inline-block">
-              {" "}
-              <button className="bg-indigo-600 hover:bg-indigo-700  text-white font-semibold py-3 px-8 rounded-full shadow-lg transition-all duration-300 hover:scale-105 active:scale-95">
-                Get Started
+          <motion.div
+            variants={textVariants}
+            className="flex flex-wrap gap-4 items-center justify-center md:justify-start"
+          >
+            <Link href="/events" className="inline-block">
+              <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer">
+                Explore Events
               </button>
             </Link>
+
+            {!user && (
+              <Link href="/register" className="inline-block">
+                <button className="bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-800 text-slate-800 dark:text-white font-semibold py-3 px-8 rounded-full shadow-md border border-slate-200 dark:border-slate-700 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer">
+                  Get Started
+                </button>
+              </Link>
+            )}
           </motion.div>
         </motion.div>
 
