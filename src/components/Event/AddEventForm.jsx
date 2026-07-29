@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { getOrganizationByUserEmail } from "@/lib/actions/organization";
 import { addEvent } from "@/lib/actions/event";
@@ -40,6 +41,7 @@ const EVENT_CATEGORIES = [
 ];
 
 export default function AddEventForm({ onEventCreated }) {
+  const router = useRouter();
   const { data: session, isPending: sessionLoading } = useSession();
 
   const [organizations, setOrganizations] = useState([]);
@@ -217,7 +219,7 @@ export default function AddEventForm({ onEventCreated }) {
 
       const result = await addEvent(payload);
 
-      toast.success("Event submitted successfully! Status set to pending approval.");
+      toast.success("Event submitted successfully! Redirecting to Manage Events...");
 
       // Reset form
       setFormData({
@@ -236,6 +238,9 @@ export default function AddEventForm({ onEventCreated }) {
       if (onEventCreated) {
         onEventCreated(result);
       }
+
+      // Redirect organizer to manage events page
+      router.push("/dashboard/organizer/events");
     } catch (err) {
       toast.error(err?.message || "Failed to create event");
     } finally {
