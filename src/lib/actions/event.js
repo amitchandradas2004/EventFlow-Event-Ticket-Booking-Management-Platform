@@ -69,3 +69,19 @@ export const updateEventById = async (id, data) => {
     revalidatePath("/dashboard/organizer/events");
     return result;
 };
+
+export const getOrganizerStats = async (email) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/organizer/stats/${encodeURIComponent(email)}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        cache: "no-store"
+    });
+    const result = await res.json();
+    if (!res.ok) {
+        throw new Error(result.message || "Failed to fetch organizer stats");
+    }
+    return result;
+};
+
