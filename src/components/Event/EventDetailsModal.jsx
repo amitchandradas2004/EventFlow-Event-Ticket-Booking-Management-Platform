@@ -17,7 +17,7 @@ import {
   Mail
 } from "lucide-react";
 
-export default function EventDetailsModal({ event, isOpen, onClose }) {
+export default function EventDetailsModal({ event, isOpen, onClose, isSectionModal = false }) {
   const [imageError, setImageError] = useState(false);
 
   if (!event) return null;
@@ -60,25 +60,37 @@ export default function EventDetailsModal({ event, isOpen, onClose }) {
       })
     : "N/A";
 
+  const overlayClass = isSectionModal
+    ? "absolute inset-0 z-40 flex items-center justify-center p-4 sm:p-6 min-h-full"
+    : "fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4";
+
+  const backdropClass = isSectionModal
+    ? "absolute inset-0 bg-slate-950/75 backdrop-blur-md cursor-pointer"
+    : "fixed inset-0 bg-slate-950/60 backdrop-blur-xs cursor-pointer";
+
+  const cardClass = isSectionModal
+    ? "relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl z-10"
+    : "relative w-full max-w-2xl max-h-[85vh] sm:max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-900 border-t sm:border border-slate-200 dark:border-slate-800 rounded-t-3xl rounded-b-none sm:rounded-3xl shadow-2xl z-10";
+
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className={overlayClass}>
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
+            className={backdropClass}
           />
 
           {/* Modal Content */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            initial={{ opacity: 0, scale: 0.95, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl z-10"
+            exit={{ opacity: 0, scale: 0.95, y: 15 }}
+            className={cardClass}
           >
             {/* Header Banner Image */}
             <div className="relative w-full h-48 sm:h-56 bg-slate-100 dark:bg-slate-800 overflow-hidden">

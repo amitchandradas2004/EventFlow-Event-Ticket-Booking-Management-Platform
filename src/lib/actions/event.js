@@ -85,3 +85,23 @@ export const getOrganizerStats = async (email) => {
     return result;
 };
 
+export const getApprovedEvents = async (limit = 6) => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/event/approved?limit=${limit}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            cache: "no-store"
+        });
+        if (!res.ok) {
+            return { success: false, result: [] };
+        }
+        const result = await res.json();
+        return result;
+    } catch (err) {
+        console.error("Error in getApprovedEvents:", err);
+        return { success: false, result: [] };
+    }
+};
+

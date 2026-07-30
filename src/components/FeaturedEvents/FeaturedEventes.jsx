@@ -1,169 +1,215 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Calendar, MapPin, ArrowRight, Flame } from "lucide-react";
-
-// Swap this with your real event data / API fetch
-const events = [
-  {
-    id: 1,
-    title: "Coke Studio Bangla Live",
-    category: "Concert",
-    date: "Aug 14, 2026",
-    location: "Army Stadium, Dhaka",
-    price: "৳1,200",
-    image:
-      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=800&auto=format&fit=crop",
-    trending: true,
-  },
-  {
-    id: 2,
-    title: "Dhaka Comedy Nights",
-    category: "Comedy",
-    date: "Aug 20, 2026",
-    location: "Bashundhara Convention Hall",
-    price: "৳800",
-    image:
-      "https://images.unsplash.com/photo-1585699324551-f6c309eedeca?q=80&w=800&auto=format&fit=crop",
-    trending: false,
-  },
-  {
-    id: 3,
-    title: "Startup Summit 2026",
-    category: "Conference",
-    date: "Sep 02, 2026",
-    location: "ICCB, Dhaka",
-    price: "৳2,500",
-    image:
-      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop",
-    trending: true,
-  },
-  {
-    id: 4,
-    title: "Premier Futsal League Finals",
-    category: "Sports",
-    date: "Sep 10, 2026",
-    location: "Bir Shreshtha Stadium",
-    price: "৳500",
-    image:
-      "https://images.unsplash.com/photo-1522778119026-d647f0596c20?q=80&w=800&auto=format&fit=crop",
-    trending: false,
-  },
-];
+import { Calendar, MapPin, ArrowRight, Flame, Ticket, Info, Tag, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { getApprovedEvents } from "@/lib/actions/event";
+import EventDetailsModal from "@/components/Event/EventDetailsModal";
 
 const containerVariants = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.12,
+      staggerChildren: 0.1,
     },
   },
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 24 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
 export default function FeaturedEvents() {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        setLoading(true);
+        const data = await getApprovedEvents(6);
+        const fetched = data?.result || [];
+        setEvents(fetched.slice(0, 6));
+      } catch (err) {
+        console.error("Error fetching approved events from database:", err);
+        setEvents([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchEvents();
+  }, []);
+
+  const handleOpenDetails = (evt) => {
+    setSelectedEvent(evt);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseDetails = () => {
+    setIsModalOpen(false);
+    setSelectedEvent(null);
+  };
+
   return (
-    <section className="relative w-full overflow-hidden bg-indigo-100 py-16 px-4 transition-colors duration-300 dark:bg-[#0B0F2E] sm:py-24 sm:px-6">
-      {/* Ambient glow circles */}
-      <div className="pointer-events-none absolute -top-32 -left-32 h-72 w-72 rounded-full bg-indigo-400/10 blur-[100px] dark:bg-indigo-600/25 sm:h-96 sm:w-96 sm:blur-[120px]" />
-      <div className="pointer-events-none absolute -bottom-32 -right-32 h-72 w-72 rounded-full bg-indigo-400/10 blur-[100px] dark:bg-indigo-500/25 sm:h-96 sm:w-96 sm:blur-[120px]" />
+    <section className="relative w-full overflow-hidden bg-slate-100/80 py-16 px-4 transition-colors duration-300 dark:bg-[#080B21] sm:py-24 sm:px-6">
+      {/* Background ambient glow accents */}
+      <div className="pointer-events-none absolute -top-40 left-0 h-96 w-96 rounded-full bg-indigo-500/10 blur-[130px] dark:bg-indigo-600/20" />
+      <div className="pointer-events-none absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-purple-500/10 blur-[130px] dark:bg-purple-600/20" />
 
       <div className="relative mx-auto max-w-7xl">
-        {/* Section header */}
+        {/* Section Header */}
         <div className="mb-10 flex flex-col items-start justify-between gap-6 sm:mb-14 sm:flex-row sm:items-end">
           <div>
-            <span className="mb-3 inline-block rounded-full border border-indigo-400/30 bg-indigo-500/10 px-4 py-1 text-xs font-medium tracking-wide text-indigo-600 dark:border-indigo-400/20 dark:text-indigo-300">
-              Happening Soon
+            <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-4 py-1 text-xs font-semibold tracking-wide text-indigo-600 dark:border-indigo-400/20 dark:text-indigo-400">
+              <Flame className="h-3.5 w-3.5 text-amber-500" /> Admin Approved Events
             </span>
-            <h2 className="text-2xl font-semibold text-slate-900 dark:text-white sm:text-3xl md:text-4xl">
-              Trending Events
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl md:text-4xl">
+              Featured Events
             </h2>
-            <p className="mt-3 max-w-md text-sm text-slate-600 dark:text-slate-400 sm:text-base">
-              The events people in your city are grabbing tickets for right now.
+            <p className="mt-3 max-w-lg text-sm text-slate-600 dark:text-slate-400 sm:text-base">
+              Discover top verified concerts, tech summits, sports tournaments, and live experiences.
             </p>
           </div>
 
-          <button className="group inline-flex items-center gap-2 text-sm font-medium text-indigo-600 transition hover:text-indigo-500 dark:text-indigo-300 dark:hover:text-indigo-200">
-            View all events
+          <Link
+            href="/events"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-indigo-600 transition hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+          >
+            Explore all events
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </button>
+          </Link>
         </div>
 
-        {/* Event cards grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-        >
-          {events.map((event) => (
-            <motion.article
-              key={event.id}
-              variants={cardVariants}
-              whileHover={{ y: -6 }}
-              className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-indigo-50 backdrop-blur-xl transition-colors hover:border-indigo-400/40 dark:border-indigo-400/10 dark:bg-indigo-500/6 dark:hover:border-indigo-400/30"
-            >
-              {/* Image */}
-              <div className="relative h-40 w-full overflow-hidden sm:h-44">
-                <img
-                  src={event.image}
-                  alt={event.title}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-white/90 via-white/10 to-transparent dark:from-[#0B0F2E]/90 dark:via-[#0B0F2E]/10" />
-
-                {event.trending && (
-                  <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-indigo-500/90 px-2.5 py-1 text-[11px] font-medium text-white shadow-lg shadow-indigo-500/30">
-                    <Flame className="h-3 w-3" />
-                    Trending
-                  </span>
-                )}
-
-                <span className="absolute right-3 top-3 rounded-full border border-slate-300 bg-white/70 px-2.5 py-1 text-[11px] font-medium text-slate-700 backdrop-blur-sm dark:border-indigo-400/20 dark:bg-[#0B0F2E]/60 dark:text-slate-200">
-                  {event.category}
-                </span>
+        {/* Loading Skeleton Grid */}
+        {loading ? (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div
+                key={i}
+                className="animate-pulse rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 space-y-4"
+              >
+                <div className="h-44 w-full rounded-2xl bg-slate-200 dark:bg-slate-800" />
+                <div className="space-y-2">
+                  <div className="h-5 w-3/4 rounded-md bg-slate-200 dark:bg-slate-800" />
+                  <div className="h-4 w-1/2 rounded-md bg-slate-200 dark:bg-slate-800" />
+                </div>
+                <div className="h-8 w-28 rounded-xl bg-slate-200 dark:bg-slate-800" />
               </div>
+            ))}
+          </div>
+        ) : events.length === 0 ? (
+          /* Empty State */
+          <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 bg-white/50 dark:bg-slate-900/40 p-12 text-center backdrop-blur-sm">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
+              <Ticket className="h-8 w-8" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">No Approved Events Yet</h3>
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400 max-w-md">
+              Approved events will appear here once verified by the platform admin.
+            </p>
+          </div>
+        ) : (
+          /* Cards Grid */
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.15 }}
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {events.map((event, index) => (
+              <motion.article
+                key={event._id || index}
+                variants={cardVariants}
+                whileHover={{ y: -6 }}
+                onClick={() => handleOpenDetails(event)}
+                className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-200/90 bg-white/90 shadow-md transition-all duration-300 hover:shadow-xl dark:border-indigo-500/15 dark:bg-indigo-950/20 dark:hover:border-indigo-500/35 dark:hover:bg-indigo-950/40 backdrop-blur-xl cursor-pointer"
+              >
+                <div>
+                  {/* Banner Image */}
+                  <div className="relative h-44 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    {event.banner ? (
+                      <img
+                        src={event.banner}
+                        alt={event.title}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-indigo-500 dark:text-indigo-400">
+                        <Calendar className="h-10 w-10" />
+                      </div>
+                    )}
 
-              {/* Content */}
-              <div className="space-y-3 p-4 sm:p-5">
-                <h3 className="text-sm font-semibold text-slate-900 line-clamp-1 dark:text-white sm:text-base">
-                  {event.title}
-                </h3>
-
-                <div className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-3.5 w-3.5 shrink-0 text-indigo-500 dark:text-indigo-400" />
-                    <span className="truncate">{event.date}</span>
+                    {/* Category Badge */}
+                    <span className="absolute top-3 right-3 rounded-full border border-white/20 bg-black/50 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md">
+                      {event.category || "General"}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-3.5 w-3.5 shrink-0 text-indigo-500 dark:text-indigo-400" />
-                    <span className="line-clamp-1">{event.location}</span>
+
+                  {/* Body Content */}
+                  <div className="p-6 space-y-3">
+                    <h3 className="text-lg font-bold text-slate-900 transition group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-300 line-clamp-1">
+                      {event.title}
+                    </h3>
+
+                    <div className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-3.5 w-3.5 text-indigo-500 shrink-0" />
+                        <span className="truncate">
+                          {event.date ? new Date(event.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "TBA"}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-3.5 w-3.5 text-indigo-500 shrink-0" />
+                        <span className="line-clamp-1">{event.location || "Online / TBA"}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between gap-2 pt-2">
-                  <span className="text-sm font-semibold text-slate-900 dark:text-white">
-                    {event.price}
+                {/* Footer action */}
+                <div className="mx-6 mb-6 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+                  <span className="text-sm font-extrabold text-slate-900 dark:text-white">
+                    {event.ticketPrice > 0 ? `৳${event.ticketPrice}` : "Free"}
                   </span>
-                  <button className="rounded-full bg-indigo-500 px-3.5 py-1.5 text-xs font-medium text-white transition hover:bg-indigo-400 sm:px-4">
-                    Buy Ticket
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenDetails(event);
+                    }}
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 cursor-pointer"
+                  >
+                    View Details <Info className="h-3.5 w-3.5 transition-transform group-hover:scale-110" />
                   </button>
                 </div>
-              </div>
-            </motion.article>
-          ))}
-        </motion.div>
+              </motion.article>
+            ))}
+          </motion.div>
+        )}
       </div>
+
+      {/* Event Details Modal (Section-scoped overlay) */}
+      <EventDetailsModal
+        isOpen={isModalOpen}
+        onClose={handleCloseDetails}
+        event={selectedEvent}
+        isSectionModal={true}
+      />
     </section>
   );
 }
