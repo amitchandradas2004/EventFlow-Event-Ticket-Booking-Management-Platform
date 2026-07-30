@@ -64,3 +64,23 @@ export const updateOrganizationById = async (id, data) => {
     revalidatePath("/dashboard/organizer/settings");
     return result;
 };
+
+export const getApprovedOrganizations = async (limit = 6) => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/organization/approved?limit=${limit}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            cache: "no-store"
+        });
+        if (!res.ok) {
+            return { success: false, result: [] };
+        }
+        const result = await res.json();
+        return result;
+    } catch (err) {
+        console.error("Error in getApprovedOrganizations:", err);
+        return { success: false, result: [] };
+    }
+};
