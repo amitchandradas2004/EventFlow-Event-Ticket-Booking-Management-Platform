@@ -117,11 +117,11 @@ export default function DashboardLayout({ children }) {
   }
 
   const sidebarContent = (
-    <div className="flex flex-col min-h-full justify-between p-4 space-y-6">
+    <div className="flex flex-col h-full justify-between p-4 space-y-4 overflow-y-auto overscroll-contain">
       {/* Top Header & Navigation */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Brand Header */}
-        <div className="flex items-center justify-between px-2 pt-2">
+        <div className="flex items-center justify-between px-2 pt-1">
           <Link href="/" className="flex items-center gap-2.5 group">
             <div className="rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 p-2 text-white shadow-md shadow-indigo-500/25">
               <Ticket size={20} />
@@ -138,9 +138,9 @@ export default function DashboardLayout({ children }) {
           href={`/dashboard/${role}/profile`}
           onClick={() => setMobileOpen(false)}
           title="View Profile"
-          className="rounded-2xl bg-slate-100/80 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 p-3.5 border border-slate-200/60 dark:border-slate-700/50 hover:border-indigo-200 dark:hover:border-indigo-800/50 flex items-center gap-3 transition cursor-pointer group"
+          className="rounded-2xl bg-slate-100/80 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 p-3 border border-slate-200/60 dark:border-slate-700/50 hover:border-indigo-200 dark:hover:border-indigo-800/50 flex items-center gap-3 transition cursor-pointer group"
         >
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0 group-hover:scale-105 transition-transform">
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0 group-hover:scale-105 transition-transform">
             {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
           </div>
           <div className="min-w-0 flex-1">
@@ -149,7 +149,7 @@ export default function DashboardLayout({ children }) {
             </p>
             <span
               className={cn(
-                "inline-block text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full border mt-1",
+                "inline-block text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full border mt-0.5",
                 roleBadgeColors[role] || roleBadgeColors.attendee
               )}
             >
@@ -183,15 +183,15 @@ export default function DashboardLayout({ children }) {
         </nav>
 
         {/* Quick Main Site Links */}
-        <div className="pt-2">
-          <p className="px-3 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
+        <div className="pt-1">
+          <p className="px-3 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">
             Main Site Routes
           </p>
           <div className="grid grid-cols-3 gap-1.5 px-1">
             <Link
               href="/"
               onClick={() => setMobileOpen(false)}
-              className="flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100/70 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 border border-slate-200/50 dark:border-slate-700/50 transition cursor-pointer"
+              className="flex flex-col items-center justify-center gap-1 py-1.5 px-1 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100/70 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 border border-slate-200/50 dark:border-slate-700/50 transition cursor-pointer"
             >
               <Home size={14} />
               <span>Home</span>
@@ -199,7 +199,7 @@ export default function DashboardLayout({ children }) {
             <Link
               href="/events"
               onClick={() => setMobileOpen(false)}
-              className="flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100/70 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 border border-slate-200/50 dark:border-slate-700/50 transition cursor-pointer"
+              className="flex flex-col items-center justify-center gap-1 py-1.5 px-1 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100/70 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 border border-slate-200/50 dark:border-slate-700/50 transition cursor-pointer"
             >
               <Calendar size={14} />
               <span>Events</span>
@@ -207,7 +207,7 @@ export default function DashboardLayout({ children }) {
             <Link
               href="/pricing"
               onClick={() => setMobileOpen(false)}
-              className="flex flex-col items-center justify-center gap-1 py-2 px-1 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100/70 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 border border-slate-200/50 dark:border-slate-700/50 transition cursor-pointer"
+              className="flex flex-col items-center justify-center gap-1 py-1.5 px-1 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-300 bg-slate-100/70 dark:bg-slate-800/50 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 border border-slate-200/50 dark:border-slate-700/50 transition cursor-pointer"
             >
               <CreditCard size={14} />
               <span>Pricing</span>
@@ -217,24 +217,24 @@ export default function DashboardLayout({ children }) {
       </div>
 
       {/* Bottom Actions: Back to Website & Logout */}
-      <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
+      <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2 shrink-0">
         <Link href="/" className="block" onClick={() => setMobileOpen(false)}>
           <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.96 }}
-            className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 hover:border-indigo-200 dark:hover:border-indigo-800 transition-all cursor-pointer shadow-xs"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 hover:text-indigo-600 dark:hover:text-indigo-300 hover:border-indigo-200 dark:hover:border-indigo-800 transition-all cursor-pointer shadow-xs"
           >
-            <Home size={18} />
+            <Home size={16} />
             <span>Back to Main Website</span>
           </motion.div>
         </Link>
         <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.96 }}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.98 }}
           onClick={() => setShowLogoutModal(true)}
-          className="w-full flex items-center justify-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 border border-red-200/70 dark:border-red-900/50 hover:bg-red-600 hover:text-white dark:hover:bg-red-600 dark:hover:text-white transition-all cursor-pointer shadow-xs"
+          className="w-full flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 border border-red-200/70 dark:border-red-900/50 hover:bg-red-600 hover:text-white dark:hover:bg-red-600 dark:hover:text-white transition-all cursor-pointer shadow-xs"
         >
-          <LogOut size={18} />
+          <LogOut size={16} />
           <span>Logout</span>
         </motion.button>
       </div>
@@ -284,7 +284,7 @@ export default function DashboardLayout({ children }) {
                 animate={{ x: 0 }}
                 exit={{ x: "-100%" }}
                 transition={{ type: "spring", damping: 25, stiffness: 250 }}
-                className="fixed inset-y-0 left-0 w-72 bg-white dark:bg-slate-900 z-50 lg:hidden border-r border-slate-200 dark:border-slate-800 overflow-y-auto shadow-2xl"
+                className="fixed inset-y-0 left-0 h-[100dvh] w-72 bg-white dark:bg-slate-900 z-50 lg:hidden border-r border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col"
               >
                 {sidebarContent}
               </motion.aside>

@@ -12,10 +12,10 @@ import {
   XCircle,
   X,
   FileText,
-  ShieldAlert
+  ShieldCheck
 } from "lucide-react";
 
-export default function OrganizationDetailsModal({ organization, isOpen, onClose }) {
+export default function OrganizationDetailsModal({ organization, isOpen, onClose, isSectionModal = false }) {
   const [logoError, setLogoError] = useState(false);
 
   if (!organization) return null;
@@ -46,17 +46,29 @@ export default function OrganizationDetailsModal({ organization, isOpen, onClose
     );
   };
 
+  const overlayClass = isSectionModal
+    ? "absolute inset-0 z-40 flex items-center justify-center p-4 sm:p-6 min-h-full"
+    : "fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4";
+
+  const backdropClass = isSectionModal
+    ? "absolute inset-0 bg-slate-950/75 backdrop-blur-md cursor-pointer"
+    : "fixed inset-0 bg-slate-950/60 backdrop-blur-xs cursor-pointer";
+
+  const cardClass = isSectionModal
+    ? "relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 z-10 space-y-6 max-h-[85vh] overflow-y-auto"
+    : "relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-t-3xl rounded-b-none sm:rounded-3xl p-6 sm:p-8 shadow-2xl border-t sm:border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 z-10 space-y-6 max-h-[85vh] sm:max-h-[90vh] overflow-y-auto";
+
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className={overlayClass}>
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs"
+            className={backdropClass}
           />
 
           {/* Modal Content */}
@@ -64,8 +76,8 @@ export default function OrganizationDetailsModal({ organization, isOpen, onClose
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
-            transition={{ type: "spring", duration: 0.3, bounce: 0.2 }}
-            className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 z-10 space-y-6 max-h-[90vh] overflow-y-auto"
+            transition={{ type: "spring", duration: 0.3, bounce: 0.15 }}
+            className={cardClass}
           >
             {/* Close Button */}
             <button
@@ -111,7 +123,7 @@ export default function OrganizationDetailsModal({ organization, isOpen, onClose
                 </span>
                 {organization.website ? (
                   <a
-                    href={organization.website}
+                    href={organization.website.startsWith("http") ? organization.website : `https://${organization.website}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline break-all"

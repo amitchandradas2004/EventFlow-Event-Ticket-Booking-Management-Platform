@@ -216,6 +216,7 @@ export default function FeaturedOrganizations() {
         isOpen={isModalOpen}
         onClose={handleCloseDetails}
         organization={selectedOrg}
+        isSectionModal={true}
       />
     </section>
   );
