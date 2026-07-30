@@ -33,6 +33,7 @@ import {
 } from "recharts";
 import { useSession } from "@/lib/auth-client";
 import { getOrganizerStats } from "@/lib/actions/event";
+import OverviewSkeleton from "@/components/Overview/OverviewSkeleton";
 
 const STATUS_COLORS = {
   Approved: "#10b981", // Emerald
@@ -69,12 +70,7 @@ export default function OrganizerOverviewView() {
   }, [session, sessionLoading]);
 
   if (loading || sessionLoading) {
-    return (
-      <div className="w-full py-16 flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600 dark:text-indigo-400" />
-        <p className="text-sm text-slate-500 dark:text-slate-400">Loading overview analytics...</p>
-      </div>
-    );
+    return <OverviewSkeleton />;
   }
 
   const orgStats = stats?.orgStats || { total: 0, approved: 0, pending: 0, rejected: 0 };
