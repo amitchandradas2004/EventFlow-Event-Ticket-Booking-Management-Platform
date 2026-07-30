@@ -65,7 +65,7 @@ export default function FeaturedOrganizations() {
       <div className="pointer-events-none absolute -top-40 right-0 h-96 w-96 rounded-full bg-purple-500/10 blur-[130px] dark:bg-purple-600/20" />
       <div className="pointer-events-none absolute -bottom-40 left-0 h-96 w-96 rounded-full bg-indigo-500/10 blur-[130px] dark:bg-indigo-600/20" />
 
-      <div className="relative mx-auto max-w-7xl">
+      <div className="relative mx-auto container">
         {/* Section Header */}
         <div className="mb-10 flex flex-col items-start justify-between gap-6 sm:mb-14 sm:flex-row sm:items-end">
           <div>

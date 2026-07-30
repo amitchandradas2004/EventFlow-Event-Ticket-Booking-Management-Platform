@@ -21,7 +21,7 @@ const maxWidthClasses = {
   sm: "max-w-[640px]",
   md: "max-w-[768px]",
   lg: "max-w-5xl",
-  xl: "max-w-7xl",
+  xl: "container",
   "2xl": "max-w-[1536px]",
   full: "max-w-full",
 };

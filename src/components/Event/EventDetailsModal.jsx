@@ -14,7 +14,8 @@ import {
   Users,
   FileText,
   Building2,
-  Mail
+  Mail,
+  Ticket
 } from "lucide-react";
 
 export default function EventDetailsModal({ event, isOpen, onClose, isSectionModal = false }) {
@@ -178,14 +179,27 @@ export default function EventDetailsModal({ event, isOpen, onClose, isSectionMod
                 </p>
               </div>
 
-              {/* Organizer Info */}
-              <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <Mail className="w-3.5 h-3.5 text-slate-400" /> {event.organizerEmail}
-                </span>
-                {event.createdAt && (
-                  <span>Created {new Date(event.createdAt).toLocaleDateString()}</span>
-                )}
+              {/* Organizer Info & Bottom Actions */}
+              <div className="pt-5 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex flex-col text-xs text-slate-500 dark:text-slate-400 gap-1">
+                  <span className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
+                    <Mail className="w-3.5 h-3.5 text-indigo-500 shrink-0" /> {event.organizerEmail}
+                  </span>
+                  {event.createdAt && (
+                    <span>Created: {new Date(event.createdAt).toLocaleDateString()}</span>
+                  )}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    alert(`Redirecting to ticket booking for: ${event.title}`);
+                  }}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/25 transition cursor-pointer active:scale-95 shrink-0"
+                >
+                  <Ticket className="w-4 h-4" />
+                  <span>Book Ticket</span>
+                </button>
               </div>
             </div>
           </motion.div>

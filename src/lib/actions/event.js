@@ -105,3 +105,30 @@ export const getApprovedEvents = async (limit = 6) => {
     }
 };
 
+export const getAllPublicEvents = async ({ page = 1, limit = 12, search = "", category = "", sortBy = "newest" } = {}) => {
+    try {
+        const queryParams = new URLSearchParams({
+            page: page.toString(),
+            limit: limit.toString(),
+            search: search,
+            category: category,
+            sortBy: sortBy
+        });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/events/all?${queryParams.toString()}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            cache: "no-store"
+        });
+        if (!res.ok) {
+            return { success: false, total: 0, page: 1, limit: 12, totalPages: 1, categories: [], result: [] };
+        }
+        const result = await res.json();
+        return result;
+    } catch (err) {
+        console.error("Error in getAllPublicEvents:", err);
+        return { success: false, total: 0, page: 1, limit: 12, totalPages: 1, categories: [], result: [] };
+    }
+};
+

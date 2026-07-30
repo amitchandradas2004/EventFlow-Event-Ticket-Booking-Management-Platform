@@ -130,7 +130,7 @@ export default function CategoryExplorer() {
       <div className="pointer-events-none absolute top-1/3 left-10 h-80 w-80 rounded-full bg-indigo-500/10 blur-[110px] dark:bg-indigo-600/15" />
       <div className="pointer-events-none absolute bottom-10 right-10 h-80 w-80 rounded-full bg-purple-500/10 blur-[110px] dark:bg-purple-600/15" />
 
-      <div className="relative mx-auto max-w-7xl">
+      <div className="relative mx-auto container">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <div>
@@ -159,11 +159,10 @@ export default function CategoryExplorer() {
         <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar scroll-smooth">
           <button
             onClick={() => setSelectedFilter("all")}
-            className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap border ${
-              selectedFilter === "all"
+            className={`px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap border ${selectedFilter === "all"
                 ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/20 dark:bg-indigo-500 dark:border-indigo-500"
                 : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300 dark:bg-indigo-950/40 dark:text-slate-300 dark:border-indigo-900/60 dark:hover:border-indigo-700"
-            }`}
+              }`}
           >
             All Categories
           </button>
@@ -174,11 +173,10 @@ export default function CategoryExplorer() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedFilter(cat.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap border ${
-                  isActive
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap border ${isActive
                     ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-500/20 dark:bg-indigo-500 dark:border-indigo-500"
                     : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300 dark:bg-indigo-950/40 dark:text-slate-300 dark:border-indigo-900/60 dark:hover:border-indigo-700"
-                }`}
+                  }`}
               >
                 <Icon className="h-3.5 w-3.5" />
                 <span>{cat.title.split(" ")[0]}</span>

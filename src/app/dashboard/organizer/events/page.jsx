@@ -67,7 +67,7 @@ export default function OrganizerManageEventsPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="container mx-auto space-y-6">
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
           Manage Events

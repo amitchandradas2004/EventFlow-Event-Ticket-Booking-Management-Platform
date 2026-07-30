@@ -2,7 +2,7 @@ import OrganizationTableSkeleton from "@/components/Organization/OrganizationTab
 
 export default function Loading() {
   return (
-    <div className="space-y-6 max-w-6xl mx-auto animate-pulse">
+    <div className="space-y-6 container mx-auto animate-pulse">
       {/* HEADER SKELETON */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 dark:border-slate-800/80 pb-6">
         <div className="space-y-2">

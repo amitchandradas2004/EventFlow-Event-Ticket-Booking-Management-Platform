@@ -93,7 +93,7 @@
 //       <div className="pointer-events-none absolute left-1/2 top-0 h-40 w-60 -translate-x-1/2 -translate-y-1/3 rounded-full bg-slate-500/10 blur-[80px] sm:h-80 sm:w-125 sm:blur-[100px] md:h-125 md:w-175 md:blur-[120px] dark:bg-slate-500/20" />
 //       <div className="pointer-events-none absolute bottom-0 left-0 h-32 w-32 -translate-x-1/3 translate-y-1/3 rounded-full bg-indigo-600/5 blur-[60px] sm:h-64 sm:w-64 sm:blur-[80px] md:h-100 md:w-100 md:blur-[100px] dark:bg-indigo-600/10" />
 
-//       <div className="relative mx-auto max-w-6xl">
+//       <div className="relative mx-auto container">
 //         <motion.div
 //           initial={{ opacity: 0, y: 20 }}
 //           whileInView={{ opacity: 1, y: 0 }}
@@ -223,12 +223,12 @@ function StepCard({ icon: Icon, step, title, description, isLast }) {
 export default function HowItWorks() {
   return (
     <section className="relative w-full overflow-hidden bg-gradient-to-br from-indigo-50 to-slate-100 dark:from-indigo-950 dark:to-slate-900 px-4 py-16 sm:px-6 sm:py-20 md:py-24 transition-colors duration-500">
-      
+
       {/* ambient background glow */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-40 w-60 -translate-x-1/2 -translate-y-1/3 rounded-full bg-indigo-300/40 blur-[80px] sm:h-80 sm:w-125 sm:blur-[100px] md:h-125 md:w-175 md:blur-[120px] dark:bg-indigo-500/20" />
       <div className="pointer-events-none absolute bottom-0 left-0 h-32 w-32 -translate-x-1/3 translate-y-1/3 rounded-full bg-slate-400/30 blur-[60px] sm:h-64 sm:w-64 sm:blur-[80px] md:h-100 md:w-100 md:blur-[100px] dark:bg-slate-600/20" />
 
-      <div className="relative mx-auto max-w-6xl">
+      <div className="relative mx-auto container">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

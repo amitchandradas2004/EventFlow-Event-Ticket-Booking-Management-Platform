@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function OrganizerOverviewPage() {
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="container mx-auto">
       <OrganizerOverviewView />
     </div>
   );

@@ -71,7 +71,7 @@ export default function OrganizationSettingsView({
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-6 container mx-auto">
       {/* HEADER WITH TOP ACTION / SETTINGS BUTTON */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 dark:border-slate-800/80 pb-6">
         <div>

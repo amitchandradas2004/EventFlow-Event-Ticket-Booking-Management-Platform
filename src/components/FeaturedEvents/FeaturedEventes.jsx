@@ -65,7 +65,7 @@ export default function FeaturedEvents() {
       <div className="pointer-events-none absolute -top-40 left-0 h-96 w-96 rounded-full bg-indigo-500/10 blur-[130px] dark:bg-indigo-600/20" />
       <div className="pointer-events-none absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-purple-500/10 blur-[130px] dark:bg-purple-600/20" />
 
-      <div className="relative mx-auto max-w-7xl">
+      <div className="relative mx-auto container">
         {/* Section Header */}
         <div className="mb-10 flex flex-col items-start justify-between gap-6 sm:mb-14 sm:flex-row sm:items-end">
           <div>
@@ -183,7 +183,7 @@ export default function FeaturedEvents() {
                 {/* Footer action */}
                 <div className="mx-6 mb-6 pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                   <span className="text-sm font-extrabold text-slate-900 dark:text-white">
-                    {event.ticketPrice > 0 ? `৳${event.ticketPrice}` : "Free"}
+                    {event.ticketPrice > 0 ? `$${event.ticketPrice}` : "Free"}
                   </span>
 
                   <button

@@ -48,7 +48,7 @@ export default function Footer() {
       {/* Background Glow */}
       <div className="absolute left-1/2 top-0 h-72 w-72 -translate-x-1/2 rounded-full bg-indigo-500/20 blur-[140px]" />
 
-      <div className="relative mx-auto max-w-7xl px-6 py-16">
+      <div className="relative mx-auto container px-6 py-16">
         <div className="grid gap-14 lg:grid-cols-12">
           {/* Brand */}
           <motion.div
