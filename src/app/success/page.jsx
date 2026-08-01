@@ -42,7 +42,7 @@ export default async function Success({ searchParams }) {
 
         return <SuccessContent sessionData={sessionData} />;
     } catch (err) {
-        console.error("Stripe session retrieval error:", err);
+        // console.error("Stripe session retrieval error:", err);
         return redirect('/');
     }
 }

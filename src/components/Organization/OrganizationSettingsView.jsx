@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Settings, ArrowLeft } from "lucide-react";
+import { Plus, Settings, ArrowLeft, AlertTriangle, Sparkles, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import OrganizationTable from "./OrganizationTable";
 import AddOrganizationForm from "./AddOrganizationForm";
 import { getOrganizationByUserEmail } from "@/lib/actions/organization";
@@ -10,12 +11,15 @@ import { getOrganizationByUserEmail } from "@/lib/actions/organization";
 export default function OrganizationSettingsView({
   initialEmail = "",
   initialOrganizations = [],
-  initialPagination = { total: 0, page: 1, limit: 10, totalPages: 1 }
+  initialPagination = { total: 0, page: 1, limit: 10, totalPages: 1 },
+  isPremium = false
 }) {
   const [view, setView] = useState("table");
   const [organizations, setOrganizations] = useState(initialOrganizations);
   const [pagination, setPagination] = useState(initialPagination);
   const [isLoading, setIsLoading] = useState(false);
+
+  const isLimitReached = !isPremium && pagination.total >= 10;
 
   const handleOrganizationAdded = (newOrg) => {
     setOrganizations((prev) => [newOrg, ...prev]);
@@ -72,6 +76,45 @@ export default function OrganizationSettingsView({
 
   return (
     <div className="space-y-6 container mx-auto">
+      {/* WARNING BANNER FOR NON-PREMIUM USERS AT FREE LIMIT */}
+      {isLimitReached && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-3xl border border-amber-300/80 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-amber-500/10 p-5 sm:p-6 backdrop-blur-xl dark:border-amber-500/30 dark:bg-amber-950/40 shadow-lg"
+        >
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3.5">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-md shadow-amber-500/30">
+                <AlertTriangle size={22} />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-bold text-amber-900 dark:text-amber-200">
+                    Free Organization Limit Reached ({pagination.total}/10)
+                  </h3>
+                  <span className="rounded-full bg-amber-200/80 dark:bg-amber-900/60 px-2.5 py-0.5 text-xs font-bold text-amber-900 dark:text-amber-200">
+                    Starter Plan
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                  You have reached the maximum 10 free organizations for Starter accounts. Upgrade your account to <strong className="font-bold text-amber-950 dark:text-white">Premium ($49 Lifetime)</strong> to publish unlimited organizations!
+                </p>
+              </div>
+            </div>
+
+            <Link
+              href="/pricing"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-indigo-600 px-5 py-3 text-xs font-bold text-white shadow-md hover:from-amber-600 hover:to-indigo-700 transition-all shrink-0 cursor-pointer"
+            >
+              <Sparkles size={15} />
+              Upgrade to Premium
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+        </motion.div>
+      )}
+
       {/* HEADER WITH TOP ACTION / SETTINGS BUTTON */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 dark:border-slate-800/80 pb-6">
         <div>
@@ -131,6 +174,8 @@ export default function OrganizationSettingsView({
         <AddOrganizationForm
           initialEmail={initialEmail}
           onSubmitSuccess={handleOrganizationAdded}
+          isPremium={isPremium}
+          totalOrganizations={pagination.total}
         />
       )}
     </div>

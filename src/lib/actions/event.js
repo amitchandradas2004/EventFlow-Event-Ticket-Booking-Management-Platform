@@ -100,7 +100,7 @@ export const getApprovedEvents = async (limit = 6) => {
         const result = await res.json();
         return result;
     } catch (err) {
-        console.error("Error in getApprovedEvents:", err);
+        // console.error("Error in getApprovedEvents:", err);
         return { success: false, result: [] };
     }
 };
@@ -127,7 +127,7 @@ export const getAllPublicEvents = async ({ page = 1, limit = 12, search = "", ca
         const result = await res.json();
         return result;
     } catch (err) {
-        console.error("Error in getAllPublicEvents:", err);
+        // console.error("Error in getAllPublicEvents:", err);
         return { success: false, total: 0, page: 1, limit: 12, totalPages: 1, categories: [], result: [] };
     }
 };

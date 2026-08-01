@@ -39,7 +39,7 @@ export default function FeaturedOrganizations() {
         const fetched = data?.result || [];
         setOrganizations(fetched.slice(0, 6));
       } catch (err) {
-        console.error("Error fetching approved organizations from database:", err);
+        // console.error("Error fetching approved organizations from database:", err);
         setOrganizations([]);
       } finally {
         setLoading(false);

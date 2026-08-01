@@ -80,7 +80,7 @@ export const getApprovedOrganizations = async (limit = 6) => {
         const result = await res.json();
         return result;
     } catch (err) {
-        console.error("Error in getApprovedOrganizations:", err);
+        // console.error("Error in getApprovedOrganizations:", err);
         return { success: false, result: [] };
     }
 };

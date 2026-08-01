@@ -111,7 +111,7 @@ export default function PublicEventsPage() {
           setTotalPages(1);
         }
       } catch (err) {
-        console.error("Failed to load events:", err);
+        // console.error("Failed to load events:", err);
         setEvents([]);
       } finally {
         setLoading(false);
@@ -209,8 +209,8 @@ export default function PublicEventsPage() {
                     setPage(1);
                   }}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer shrink-0 ${active
-                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/25"
-                      : "bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/25"
+                    : "bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
                     }`}
                 >
                   {cat}
@@ -261,8 +261,8 @@ export default function PublicEventsPage() {
                             setPage(1);
                           }}
                           className={`flex items-center justify-between w-full px-3 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${isSelected
-                              ? "bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 font-bold"
-                              : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-indigo-900/40"
+                            ? "bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 font-bold"
+                            : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-indigo-900/40"
                             }`}
                         >
                           <span>{opt.label}</span>
@@ -444,8 +444,8 @@ export default function PublicEventsPage() {
                   key={pageNum}
                   onClick={() => handlePageChange(pageNum)}
                   className={`w-8 h-8 rounded-xl text-xs font-bold transition cursor-pointer ${page === pageNum
-                      ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/25"
-                      : "bg-white dark:bg-indigo-950/40 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-indigo-900/50 border border-slate-200 dark:border-indigo-500/20"
+                    ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/25"
+                    : "bg-white dark:bg-indigo-950/40 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-indigo-900/50 border border-slate-200 dark:border-indigo-500/20"
                     }`}
                 >
                   {pageNum}

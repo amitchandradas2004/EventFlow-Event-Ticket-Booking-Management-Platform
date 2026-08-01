@@ -56,7 +56,7 @@ export default function OrganizerOverviewView() {
           setStats(data);
         }
       } catch (err) {
-        console.error("Failed to load organizer stats:", err);
+        // console.error("Failed to load organizer stats:", err);
       } finally {
         setLoading(false);
       }

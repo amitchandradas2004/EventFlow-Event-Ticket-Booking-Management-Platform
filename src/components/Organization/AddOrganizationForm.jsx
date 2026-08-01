@@ -17,7 +17,15 @@ import {
 import toast from "react-hot-toast";
 import { addOrganization } from "@/lib/actions/organization";
 
-export default function AddOrganizationForm({ initialEmail = "", onSubmitSuccess }) {
+import Link from "next/link";
+import { AlertTriangle, ArrowRight } from "lucide-react";
+
+export default function AddOrganizationForm({
+  initialEmail = "",
+  onSubmitSuccess,
+  isPremium = false,
+  totalOrganizations = 0
+}) {
   const [formData, setFormData] = useState({
     organizationName: "",
     logo: "",
@@ -27,6 +35,8 @@ export default function AddOrganizationForm({ initialEmail = "", onSubmitSuccess
 
   const [loading, setLoading] = useState(false);
   const [logoError, setLogoError] = useState(false);
+
+  const isLimitReached = !isPremium && totalOrganizations >= 10;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,6 +49,12 @@ export default function AddOrganizationForm({ initialEmail = "", onSubmitSuccess
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isLimitReached) {
+      toast.error("Free limit reached! You can publish up to 10 organizations for free. Please upgrade to Premium.");
+      return;
+    }
+
     setLoading(true);
 
     const submissionData = {
@@ -86,6 +102,26 @@ export default function AddOrganizationForm({ initialEmail = "", onSubmitSuccess
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* LIMIT WARNING BANNER */}
+          {isLimitReached && (
+            <div className="rounded-2xl border border-amber-300 bg-amber-50 dark:bg-amber-950/50 p-4 dark:border-amber-500/40 text-amber-900 dark:text-amber-200 text-xs sm:text-sm space-y-2">
+              <div className="flex items-center gap-2 font-bold text-amber-800 dark:text-amber-300">
+                <AlertTriangle size={18} className="text-amber-600 dark:text-amber-400 shrink-0" />
+                <span>Free Plan Limit Reached (10/10 Organizations)</span>
+              </div>
+              <p className="leading-relaxed">
+                You have reached your limit of 10 free organizations. Upgrade to Premium to publish unlimited organizations.
+              </p>
+              <Link
+                href="/pricing"
+                className="inline-flex items-center gap-1.5 font-bold text-indigo-600 dark:text-indigo-400 hover:underline pt-1"
+              >
+                Upgrade to Premium Plan ($49 Lifetime)
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+          )}
+
           {/* ORGANIZATION NAME */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 flex items-center gap-1.5">
@@ -97,10 +133,11 @@ export default function AddOrganizationForm({ initialEmail = "", onSubmitSuccess
                 type="text"
                 name="organizationName"
                 required
+                disabled={isLimitReached}
                 value={formData.organizationName}
                 onChange={handleChange}
                 placeholder="e.g. EventFlow Tech Community"
-                className="w-full px-4 py-3 bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none"
+                className="w-full px-4 py-3 bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none disabled:opacity-50"
               />
             </div>
           </div>
@@ -118,10 +155,11 @@ export default function AddOrganizationForm({ initialEmail = "", onSubmitSuccess
                   type="url"
                   name="logo"
                   required
+                  disabled={isLimitReached}
                   value={formData.logo}
                   onChange={handleChange}
                   placeholder="https://example.com/logo.png"
-                  className="w-full px-4 py-3 bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none"
+                  className="w-full px-4 py-3 bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none disabled:opacity-50"
                 />
               </div>
             </div>
@@ -137,10 +175,11 @@ export default function AddOrganizationForm({ initialEmail = "", onSubmitSuccess
                   type="url"
                   name="website"
                   required
+                  disabled={isLimitReached}
                   value={formData.website}
                   onChange={handleChange}
                   placeholder="https://myorganization.com"
-                  className="w-full px-4 py-3 bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none"
+                  className="w-full px-4 py-3 bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none disabled:opacity-50"
                 />
               </div>
             </div>
@@ -156,36 +195,48 @@ export default function AddOrganizationForm({ initialEmail = "", onSubmitSuccess
               <textarea
                 name="description"
                 required
+                disabled={isLimitReached}
                 rows={4}
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Briefly describe your organization's mission, goals, and event scope..."
-                className="w-full px-4 py-3 bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none resize-none"
+                className="w-full px-4 py-3 bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none resize-none disabled:opacity-50"
               />
             </div>
           </div>
 
           {/* SUBMIT BUTTON */}
           <div className="pt-2">
-            <motion.button
-              type="submit"
-              disabled={loading}
-              whileHover={{ scale: loading ? 1 : 1.01 }}
-              whileTap={{ scale: loading ? 1 : 0.98 }}
-              className="w-full py-3.5 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 transition cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  <span>Submitting Organization...</span>
-                </>
-              ) : (
-                <>
-                  <PlusCircle size={18} />
-                  <span>Add Organization</span>
-                </>
-              )}
-            </motion.button>
+            {isLimitReached ? (
+              <Link
+                href="/pricing"
+                className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-amber-500 to-indigo-600 hover:from-amber-600 hover:to-indigo-700 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 transition cursor-pointer"
+              >
+                <Sparkles size={18} />
+                <span>Upgrade to Premium to Add More</span>
+                <ArrowRight size={16} />
+              </Link>
+            ) : (
+              <motion.button
+                type="submit"
+                disabled={loading}
+                whileHover={{ scale: loading ? 1 : 1.01 }}
+                whileTap={{ scale: loading ? 1 : 0.98 }}
+                className="w-full py-3.5 px-6 rounded-2xl bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 transition cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    <span>Submitting Organization...</span>
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle size={18} />
+                    <span>Add Organization</span>
+                  </>
+                )}
+              </motion.button>
+            )}
           </div>
         </form>
       </motion.div>

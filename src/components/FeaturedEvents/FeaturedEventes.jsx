@@ -39,7 +39,7 @@ export default function FeaturedEvents() {
         const fetched = data?.result || [];
         setEvents(fetched.slice(0, 6));
       } catch (err) {
-        console.error("Error fetching approved events from database:", err);
+        // console.error("Error fetching approved events from database:", err);
         setEvents([]);
       } finally {
         setLoading(false);

@@ -12,7 +12,6 @@ export async function POST() {
         });
 
         const user = userSession?.user;
-        console.log(user, "user")
         if (!user) {
             return NextResponse.json(
                 { error: "Authentication required" },

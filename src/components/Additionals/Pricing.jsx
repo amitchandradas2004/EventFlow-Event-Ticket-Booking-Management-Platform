@@ -20,13 +20,6 @@ import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 
 export default function Pricing({ searchParams = {} }) {
-  const canceled = searchParams?.canceled;
-
-  if (canceled) {
-    console.log(
-      'Order canceled -- continue to shop around and checkout when you\'re ready.'
-    )
-  }
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const user = session?.user;
@@ -173,7 +166,7 @@ export default function Pricing({ searchParams = {} }) {
                       <Check size={13} strokeWidth={2.5} />
                     </span>
                     <span>
-                      <strong className="font-semibold text-slate-900 dark:text-white">3 Organizations</strong> publish limit
+                      <strong className="font-semibold text-slate-900 dark:text-white">10 Organizations</strong> publish limit
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
@@ -390,7 +383,7 @@ export default function Pricing({ searchParams = {} }) {
                 </h3>
 
                 <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                  You are starting with our <strong className="font-semibold text-indigo-600 dark:text-indigo-400">$0 Free Starter Plan</strong>. You can now publish up to 3 organizations and explore all essential event management features!
+                  You are starting with our <strong className="font-semibold text-indigo-600 dark:text-indigo-400">$0 Free Starter Plan</strong>. You can now publish up to 10 organizations and explore all essential event management features!
                 </p>
 
                 <div className="mt-6 w-full space-y-3">

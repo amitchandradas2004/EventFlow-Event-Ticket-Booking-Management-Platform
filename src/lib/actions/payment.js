@@ -11,11 +11,10 @@ export const payments = async (data) => {
         });
         const result = await res.json();
         if (result.success) {
-            console.log('Payment created successfully');
             return result;
         }
     } catch (error) {
-        console.error('Error creating payment session:', error);
+        // console.error('Error creating payment session:', error);
         return error;
     }
 }

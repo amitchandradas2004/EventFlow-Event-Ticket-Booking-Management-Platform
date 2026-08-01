@@ -29,7 +29,7 @@ export default function OrganizerManageEventsPage() {
           setTotalPages(res.totalPages || 1);
         }
       } catch (err) {
-        console.error("Error fetching events:", err);
+        // console.error("Error fetching events:", err);
         toast.error("Failed to load your events");
       } finally {
         setIsLoading(false);

@@ -43,11 +43,14 @@ export default async function OrganizerSettingsPage() {
     }
   }
 
+  const isPremium = Boolean(session?.user?.isPremium);
+
   return (
     <OrganizationSettingsView
       initialEmail={email}
       initialOrganizations={initialOrganizations}
       initialPagination={paginationInfo}
+      isPremium={isPremium}
     />
   );
 }

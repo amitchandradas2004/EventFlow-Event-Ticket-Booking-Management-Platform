@@ -107,7 +107,6 @@ export default function AddEventForm({ onEventCreated }) {
           }
         }
       } catch (err) {
-        console.error("Failed to load organizations:", err);
         toast.error("Failed to load your organizations");
       } finally {
         setLoadingOrgs(false);
@@ -313,11 +312,10 @@ export default function AddEventForm({ onEventCreated }) {
             <button
               type="button"
               onClick={() => setOrgDropdownOpen((prev) => !prev)}
-              className={`w-full px-4 py-3 bg-white dark:bg-slate-800 border rounded-xl flex items-center justify-between text-left text-sm transition-all duration-200 shadow-sm ${
-                orgDropdownOpen
-                  ? "border-indigo-500 ring-2 ring-indigo-500/20"
-                  : "border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600"
-              }`}
+              className={`w-full px-4 py-3 bg-white dark:bg-slate-800 border rounded-xl flex items-center justify-between text-left text-sm transition-all duration-200 shadow-sm ${orgDropdownOpen
+                ? "border-indigo-500 ring-2 ring-indigo-500/20"
+                : "border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600"
+                }`}
             >
               <div className="flex items-center gap-3 truncate">
                 <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/60 flex items-center gap-1.5 justify-center text-indigo-600 dark:text-indigo-400 shrink-0 overflow-hidden">
@@ -345,9 +343,8 @@ export default function AddEventForm({ onEventCreated }) {
                 </div>
               </div>
               <ChevronDown
-                className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${
-                  orgDropdownOpen ? "rotate-180 text-indigo-600 dark:text-indigo-400" : ""
-                }`}
+                className={`w-4 h-4 text-slate-400 transition-transform duration-200 shrink-0 ${orgDropdownOpen ? "rotate-180 text-indigo-600 dark:text-indigo-400" : ""
+                  }`}
               />
             </button>
 
@@ -368,11 +365,10 @@ export default function AddEventForm({ onEventCreated }) {
                         key={org._id}
                         type="button"
                         onClick={() => handleSelectOrg(org._id)}
-                        className={`w-full px-4 py-3 text-left flex items-center justify-between text-sm transition-colors ${
-                          isSelected
-                            ? "bg-indigo-50/80 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-200 font-semibold"
-                            : "hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200"
-                        }`}
+                        className={`w-full px-4 py-3 text-left flex items-center justify-between text-sm transition-colors ${isSelected
+                          ? "bg-indigo-50/80 dark:bg-indigo-950/60 text-indigo-900 dark:text-indigo-200 font-semibold"
+                          : "hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200"
+                          }`}
                       >
                         <div className="flex items-center gap-3 truncate">
                           <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 shrink-0 overflow-hidden">
@@ -487,11 +483,10 @@ export default function AddEventForm({ onEventCreated }) {
                 type="button"
                 disabled={isFormDisabled}
                 onClick={() => setCatDropdownOpen((prev) => !prev)}
-                className={`w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border rounded-xl flex items-center justify-between text-left text-sm transition-all duration-200 ${
-                  catDropdownOpen
-                    ? "border-indigo-500 ring-2 ring-indigo-500/20"
-                    : "border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600"
-                }`}
+                className={`w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border rounded-xl flex items-center justify-between text-left text-sm transition-all duration-200 ${catDropdownOpen
+                  ? "border-indigo-500 ring-2 ring-indigo-500/20"
+                  : "border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600"
+                  }`}
               >
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <Tag className="w-4 h-4" />
@@ -500,9 +495,8 @@ export default function AddEventForm({ onEventCreated }) {
                   {formData.category || "-- Select Category --"}
                 </span>
                 <ChevronDown
-                  className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
-                    catDropdownOpen ? "rotate-180 text-indigo-600 dark:text-indigo-400" : ""
-                  }`}
+                  className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${catDropdownOpen ? "rotate-180 text-indigo-600 dark:text-indigo-400" : ""
+                    }`}
                 />
               </button>
 
@@ -522,11 +516,10 @@ export default function AddEventForm({ onEventCreated }) {
                           key={cat}
                           type="button"
                           onClick={() => handleSelectCategory(cat)}
-                          className={`w-full px-4 py-2.5 text-left text-sm flex items-center justify-between transition-colors ${
-                            isSelected
-                              ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-semibold"
-                              : "hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200"
-                          }`}
+                          className={`w-full px-4 py-2.5 text-left text-sm flex items-center justify-between transition-colors ${isSelected
+                            ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-semibold"
+                            : "hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200"
+                            }`}
                         >
                           <span>{cat}</span>
                           {isSelected && <Check className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />}
@@ -573,11 +566,10 @@ export default function AddEventForm({ onEventCreated }) {
                 type="button"
                 disabled={isFormDisabled}
                 onClick={() => setDatePickerOpen((prev) => !prev)}
-                className={`w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border rounded-xl flex items-center justify-between text-left text-sm transition-all duration-200 ${
-                  datePickerOpen
-                    ? "border-indigo-500 ring-2 ring-indigo-500/20"
-                    : "border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600"
-                }`}
+                className={`w-full pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border rounded-xl flex items-center justify-between text-left text-sm transition-all duration-200 ${datePickerOpen
+                  ? "border-indigo-500 ring-2 ring-indigo-500/20"
+                  : "border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600"
+                  }`}
               >
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                   <Calendar className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
@@ -787,11 +779,10 @@ export default function AddEventForm({ onEventCreated }) {
             <button
               type="submit"
               disabled={isFormDisabled || loading}
-              className={`px-8 py-3 rounded-xl text-white font-semibold text-sm shadow-lg flex items-center gap-2 transition duration-200 ${
-                isFormDisabled
-                  ? "bg-slate-400 dark:bg-slate-700 cursor-not-allowed shadow-none"
-                  : "bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 shadow-indigo-500/25 active:scale-[0.98]"
-              }`}
+              className={`px-8 py-3 rounded-xl text-white font-semibold text-sm shadow-lg flex items-center gap-2 transition duration-200 ${isFormDisabled
+                ? "bg-slate-400 dark:bg-slate-700 cursor-not-allowed shadow-none"
+                : "bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 shadow-indigo-500/25 active:scale-[0.98]"
+                }`}
             >
               {loading ? (
                 <>
