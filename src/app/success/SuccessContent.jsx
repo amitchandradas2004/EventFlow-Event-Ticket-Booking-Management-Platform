@@ -26,7 +26,8 @@ export default function SuccessContent({ sessionData }) {
     paymentStatus = "paid",
   } = sessionData;
 
-  const formattedAmount = (amountTotal / 100).toLocaleString("en-US", {
+  const numericAmount = amountTotal > 100 ? amountTotal / 100 : (amountTotal || 49);
+  const formattedAmount = numericAmount.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",
   });

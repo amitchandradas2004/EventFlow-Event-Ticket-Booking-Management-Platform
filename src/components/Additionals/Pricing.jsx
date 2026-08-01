@@ -19,7 +19,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 
-export default function Pricing() {
+export default function Pricing({ searchParams = {} }) {
+  const canceled = searchParams?.canceled;
+
+  if (canceled) {
+    console.log(
+      'Order canceled -- continue to shop around and checkout when you\'re ready.'
+    )
+  }
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const user = session?.user;
@@ -506,17 +513,15 @@ export default function Pricing() {
                 </p>
 
                 <div className="mt-6 w-full space-y-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsCheckoutModalOpen(false);
-                      router.push("/dashboard");
-                    }}
-                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 py-3.5 px-4 text-sm font-bold text-white shadow-md hover:from-indigo-500 hover:to-purple-500 transition-all cursor-pointer"
-                  >
-                    Proceed to Payment ($49)
-                    <ArrowRight size={16} />
-                  </button>
+                  <form action="/api/checkout_session" method="POST" className="w-full">
+                    <button
+                      type="submit"
+                      className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 py-3.5 px-4 text-sm font-bold text-white shadow-md hover:from-indigo-500 hover:to-purple-500 transition-all cursor-pointer"
+                    >
+                      Proceed to Payment ($49)
+                      <ArrowRight size={16} />
+                    </button>
+                  </form>
                 </div>
               </div>
             </motion.div>
