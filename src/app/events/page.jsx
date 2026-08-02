@@ -18,10 +18,49 @@ import {
   Sparkles,
   RefreshCw,
   Flame,
-  Tag
+  Tag,
+  Palette
 } from "lucide-react";
 import { getAllPublicEvents } from "@/lib/actions/event";
 import EventDetailsModal from "@/components/Event/EventDetailsModal";
+
+const HEADER_THEMES = [
+  {
+    id: "indigo",
+    label: "Indigo",
+    colorDot: "bg-indigo-500",
+    bgClass: "bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 dark:from-[#0B0F2E] dark:via-[#080B21] dark:to-[#050718]",
+    glowClass: "bg-indigo-400/30 dark:bg-indigo-500/20"
+  },
+  {
+    id: "ocean",
+    label: "Ocean",
+    colorDot: "bg-cyan-500",
+    bgClass: "bg-gradient-to-br from-blue-600 via-teal-600 to-indigo-800 dark:from-[#031B33] dark:via-[#061329] dark:to-[#020A17]",
+    glowClass: "bg-cyan-400/30 dark:bg-cyan-500/20"
+  },
+  {
+    id: "sunset",
+    label: "Sunset",
+    colorDot: "bg-rose-500",
+    bgClass: "bg-gradient-to-br from-rose-600 via-purple-600 to-indigo-800 dark:from-[#2A081A] dark:via-[#19071E] dark:to-[#0B0518]",
+    glowClass: "bg-rose-400/30 dark:bg-rose-500/20"
+  },
+  {
+    id: "emerald",
+    label: "Emerald",
+    colorDot: "bg-emerald-500",
+    bgClass: "bg-gradient-to-br from-emerald-600 via-teal-600 to-indigo-800 dark:from-[#04201A] dark:via-[#06181E] dark:to-[#030D15]",
+    glowClass: "bg-emerald-400/30 dark:bg-emerald-500/20"
+  },
+  {
+    id: "obsidian",
+    label: "Obsidian",
+    colorDot: "bg-slate-700",
+    bgClass: "bg-gradient-to-br from-slate-800 via-indigo-950 to-slate-950 dark:from-[#090D16] dark:via-[#05070D] dark:to-[#020306]",
+    glowClass: "bg-slate-400/20 dark:bg-slate-500/20"
+  }
+];
 
 const SORT_OPTIONS = [
   { label: "Newest First", value: "newest" },
@@ -48,6 +87,25 @@ export default function PublicEventsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalEvents, setTotalEvents] = useState(0);
+
+  // Header Background Theme State
+  const [headerThemeId, setHeaderThemeId] = useState("indigo");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("events_header_theme");
+    if (savedTheme && HEADER_THEMES.some((t) => t.id === savedTheme)) {
+      setHeaderThemeId(savedTheme);
+    }
+  }, []);
+
+  const handleSelectHeaderTheme = (id) => {
+    setHeaderThemeId(id);
+    try {
+      localStorage.setItem("events_header_theme", id);
+    } catch (e) { }
+  };
+
+  const activeHeaderTheme = HEADER_THEMES.find((t) => t.id === headerThemeId) || HEADER_THEMES[0];
 
   // Filters & Search
   const [searchQuery, setSearchQuery] = useState("");
@@ -151,36 +209,57 @@ export default function PublicEventsPage() {
       <div className="pointer-events-none absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-purple-500/10 blur-[130px] dark:bg-purple-600/20" />
 
       {/* Hero Header Section */}
-      <section className="relative w-full overflow-hidden bg-gradient-to-b from-indigo-900 via-indigo-950 to-slate-950 dark:from-[#0B0F2E] dark:via-[#080B21] dark:to-[#050718] py-16 px-4 text-white sm:py-20 sm:px-6 shadow-xl">
-        <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-96 w-[600px] rounded-full bg-indigo-500/20 blur-[140px]" />
+      <section className={`relative w-full overflow-hidden ${activeHeaderTheme.bgClass} py-20 px-4 text-white sm:py-24 sm:px-6 shadow-xl transition-colors duration-500`}>
+        <div className={`pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 h-96 w-[600px] rounded-full ${activeHeaderTheme.glowClass} blur-[140px] transition-colors duration-500`} />
 
-        <div className="relative mx-auto container text-center space-y-4">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-xs font-semibold text-indigo-200 border border-white/15 shadow-sm">
-            <Sparkles size={14} className="text-amber-400" /> Discover Unforgettable Experiences
-          </span>
+        <div className="relative mx-auto container text-center space-y-5">
+          <div className="flex items-center justify-center gap-3 flex-wrap">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold text-white/95 border border-white/20 shadow-sm">
+              <Sparkles size={14} className="text-amber-400" /> Discover Unforgettable Experiences
+            </span>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-indigo-100 to-indigo-300 bg-clip-text text-transparent">
+            {/* Header Theme / Background Color Picker */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/20 shadow-sm text-xs font-semibold text-white/95 transition-all hover:bg-white/20">
+              <Palette size={14} className="text-white" />
+              <span className="text-[11px] opacity-90 hidden sm:inline">Header Theme:</span>
+              <div className="flex items-center gap-1.5">
+                {HEADER_THEMES.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => handleSelectHeaderTheme(t.id)}
+                    title={`Switch header color to ${t.label}`}
+                    className={`h-4 w-4 rounded-full ${t.colorDot} transition-all duration-200 cursor-pointer ${headerThemeId === t.id
+                        ? "ring-2 ring-white scale-110 shadow-md"
+                        : "opacity-60 hover:opacity-100 hover:scale-105"
+                      }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-indigo-100 to-indigo-200 bg-clip-text text-transparent">
             Explore All Events
           </h1>
-          <p className="max-w-2xl mx-auto text-sm sm:text-base text-indigo-200/90 font-medium">
+          <p className="max-w-2xl mx-auto text-sm sm:text-base text-indigo-100/90 font-medium">
             Find and book tickets for top concerts, tech conferences, comedy shows, and sports events.
           </p>
 
           {/* Search Box in Hero */}
-          <div className="max-w-2xl mx-auto pt-4">
-            <div className="relative flex items-center rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-2 shadow-2xl focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-500/30 transition">
-              <Search className="w-5 h-5 text-indigo-300 ml-3 shrink-0" />
+          <div className="max-w-2xl mx-auto pt-2">
+            <div className="relative flex items-center rounded-2xl bg-white/15 backdrop-blur-xl border border-white/25 p-2 shadow-2xl focus-within:border-white/50 focus-within:ring-2 focus-within:ring-white/30 transition">
+              <Search className="w-5 h-5 text-indigo-100 ml-3 shrink-0" />
               <input
                 type="text"
                 placeholder="Search events by title, location, or keyword..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent px-3 py-2 text-sm text-white placeholder-indigo-200/60 focus:outline-none"
+                className="w-full bg-transparent px-3 py-2 text-sm text-white placeholder-indigo-100/70 focus:outline-none"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="p-1 rounded-full text-indigo-200 hover:text-white hover:bg-white/10 transition mr-2"
+                  className="p-1 rounded-full text-indigo-100 hover:text-white hover:bg-white/20 transition mr-2"
                 >
                   <X size={16} />
                 </button>

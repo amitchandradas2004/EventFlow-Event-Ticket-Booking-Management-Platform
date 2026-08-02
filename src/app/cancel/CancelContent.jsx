@@ -52,7 +52,7 @@ export default function CancelContent() {
   };
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-50 via-amber-50/30 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950/40 px-4 py-16 sm:px-6 sm:py-24 flex items-center justify-center transition-colors duration-500">
+    <section className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-50 via-amber-50/30 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950/40 px-4 py-20 sm:px-6 sm:py-24 flex items-center justify-center transition-colors duration-500">
       {/* Background Ambient Lighting Glows */}
       <div className="pointer-events-none absolute left-1/2 top-1/4 h-96 w-96 -translate-x-1/2 rounded-full bg-amber-500/15 blur-[130px] dark:bg-amber-600/10" />
       <div className="pointer-events-none absolute right-10 bottom-10 h-80 w-80 rounded-full bg-indigo-500/15 blur-[120px] dark:bg-indigo-600/10" />

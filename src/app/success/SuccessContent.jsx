@@ -78,7 +78,7 @@ export default function SuccessContent({ sessionData }) {
   ];
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-indigo-50 via-slate-50 to-emerald-50 dark:from-slate-950 dark:via-indigo-950/60 dark:to-slate-950 px-4 py-16 sm:px-6 sm:py-24 flex items-center justify-center transition-colors duration-500">
+    <section className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-indigo-50 via-slate-50 to-emerald-50 dark:from-slate-950 dark:via-indigo-950/60 dark:to-slate-950 px-4 py-20 sm:px-6 sm:py-24 flex items-center justify-center transition-colors duration-500">
       {/* Dynamic Background Glows */}
       <div className="pointer-events-none absolute left-1/2 top-1/4 h-96 w-96 -translate-x-1/2 rounded-full bg-emerald-500/20 blur-[130px] dark:bg-emerald-600/15" />
       <div className="pointer-events-none absolute right-10 bottom-10 h-80 w-80 rounded-full bg-indigo-500/20 blur-[120px] dark:bg-indigo-600/15" />
