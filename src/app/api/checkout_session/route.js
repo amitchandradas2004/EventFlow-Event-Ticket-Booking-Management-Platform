@@ -19,6 +19,13 @@ export async function POST() {
             );
         }
 
+        if (user?.isPremium) {
+            return NextResponse.json(
+                { error: "You are already a premium member" },
+                { status: 400 }
+            );
+        }
+
         const PRICE_ID = process.env.PRICE_ID;
         const session = await stripe.checkout.sessions.create({
             customer_email: user?.email,

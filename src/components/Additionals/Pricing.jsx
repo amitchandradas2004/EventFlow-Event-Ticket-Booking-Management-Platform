@@ -14,6 +14,8 @@ import {
   LockKeyhole,
   LogIn,
   UserPlus,
+  Crown,
+  LayoutDashboard,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -23,10 +25,12 @@ export default function Pricing({ searchParams = {} }) {
   const router = useRouter();
   const { data: session } = authClient.useSession();
   const user = session?.user;
+  const isPremium = Boolean(user?.isPremium);
 
   const [isFreeModalOpen, setIsFreeModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
+  const [isAlreadyPremiumModalOpen, setIsAlreadyPremiumModalOpen] = useState(false);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -54,6 +58,8 @@ export default function Pricing({ searchParams = {} }) {
   const handlePremiumClick = () => {
     if (!user) {
       setIsLoginModalOpen(true);
+    } else if (isPremium) {
+      setIsAlreadyPremiumModalOpen(true);
     } else {
       setIsCheckoutModalOpen(true);
     }
@@ -515,6 +521,85 @@ export default function Pricing({ searchParams = {} }) {
                       <ArrowRight size={16} />
                     </button>
                   </form>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Already Premium User Modal */}
+      <AnimatePresence>
+        {isAlreadyPremiumModalOpen && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsAlreadyPremiumModalOpen(false)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="relative z-10 w-full max-w-md overflow-hidden rounded-3xl border border-emerald-100 bg-white p-6 sm:p-8 shadow-2xl dark:border-emerald-500/30 dark:bg-slate-900"
+            >
+              <button
+                type="button"
+                onClick={() => setIsAlreadyPremiumModalOpen(false)}
+                className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="flex flex-col items-center text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-400 via-emerald-500 to-indigo-600 text-white shadow-lg shadow-emerald-500/30">
+                  <Crown size={32} />
+                </div>
+
+                <h3 className="mt-5 text-2xl font-extrabold text-slate-900 dark:text-white">
+                  You're Already Premium! 🎉
+                </h3>
+
+                <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Hi <strong className="font-semibold text-emerald-600 dark:text-emerald-400">{user?.name || user?.email}</strong>! You have already activated <strong className="font-semibold text-slate-900 dark:text-white">Lifetime Premium Access</strong> on your account. You cannot purchase the premium plan again.
+                </p>
+
+                <div className="mt-5 w-full rounded-2xl bg-emerald-50/80 dark:bg-emerald-950/40 p-4 border border-emerald-200/60 dark:border-emerald-800/50 text-left space-y-2 text-xs text-slate-700 dark:text-slate-200">
+                  <div className="flex items-center gap-2 font-bold text-emerald-700 dark:text-emerald-300">
+                    <CheckCircle2 size={16} />
+                    <span>Active Premium Membership</span>
+                  </div>
+                  <ul className="space-y-1.5 pl-6 list-disc text-slate-600 dark:text-slate-300">
+                    <li>Unlimited Organizations Publishing</li>
+                    <li>Featured Homepage Priority Placement</li>
+                    <li>0% Platform Commission Discount</li>
+                    <li>Full Sales Analytics & Exporting</li>
+                  </ul>
+                </div>
+
+                <div className="mt-6 w-full space-y-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAlreadyPremiumModalOpen(false);
+                      router.push("/dashboard");
+                    }}
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-indigo-600 py-3.5 px-4 text-sm font-bold text-white shadow-md hover:from-emerald-500 hover:to-indigo-500 transition-all cursor-pointer"
+                  >
+                    <LayoutDashboard size={16} />
+                    Go to Dashboard
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsAlreadyPremiumModalOpen(false)}
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 py-3 px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700/80 cursor-pointer"
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </motion.div>
