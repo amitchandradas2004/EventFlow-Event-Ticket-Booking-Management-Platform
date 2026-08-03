@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
+import ScrollProgressBar from "@/components/Layout/ScrollProgressBar";
 
 export function AppShell({ children }) {
   const pathname = usePathname();
@@ -10,6 +11,7 @@ export function AppShell({ children }) {
 
   return (
     <>
+      <ScrollProgressBar />
       {!isDashboard && <Navbar />}
       {children}
       {!isDashboard && <Footer />}

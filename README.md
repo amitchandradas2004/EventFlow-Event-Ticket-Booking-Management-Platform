@@ -6,8 +6,8 @@ A modern, responsive Event Ticket Booking & Management Platform built with **Nex
 
 ## 🌐 Live Demo
 
-- 🔗 Live Site:  
-- 🔗 Server Repository:  
+- 🔗 Live Site: [Click Here](https://eventflow-tau-flame.vercel.app)
+- 🔗 Server Repository: [Click Here](https://github.com/amitchandradas2004/EventFlow-Server)
 
 ---
 
