@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   XCircle,
@@ -15,6 +17,19 @@ import {
 import Link from "next/link";
 
 export default function CancelContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const canceled = searchParams.get("canceled");
+
+  useEffect(() => {
+    if (canceled !== "true") {
+      router.replace("/");
+    }
+  }, [canceled, router]);
+
+  if (canceled !== "true") {
+    return null;
+  }
   const containerVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
