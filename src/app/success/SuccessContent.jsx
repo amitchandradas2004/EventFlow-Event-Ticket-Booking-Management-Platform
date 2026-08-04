@@ -145,16 +145,19 @@ export default function SuccessContent({ sessionData }) {
           <motion.div variants={itemVariants} className="space-y-2 mb-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-100/70 px-4 py-1 text-xs font-semibold text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-950/60 dark:text-emerald-300">
               <PartyPopper size={14} className="text-emerald-600 dark:text-emerald-400" />
-              <span>Payment Completed Successfully</span>
+              <span>{sessionData.isEventBooking ? "Event Ticket Booked Successfully!" : "Payment Completed Successfully"}</span>
             </div>
             <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl md:text-5xl dark:text-white">
-              Welcome to{" "}
-              <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-indigo-600 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-400">
-                EventFlow Pro!
-              </span>
+              {sessionData.isEventBooking ? (
+                <>You&apos;re All Set for <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-indigo-600 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-400">{sessionData.eventTitle || "The Event"}!</span></>
+              ) : (
+                <>Welcome to <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-indigo-600 bg-clip-text text-transparent dark:from-emerald-400 dark:via-teal-300 dark:to-indigo-400">EventFlow Pro!</span></>
+              )}
             </h1>
             <p className="max-w-md text-slate-600 sm:text-lg dark:text-slate-300/80 leading-relaxed">
-              Your order has been confirmed. Lifetime Pro access is now active on your account!
+              {sessionData.isEventBooking
+                ? `Your booking for ${sessionData.quantity || 1} ${sessionData.quantity > 1 ? "tickets" : "ticket"} is confirmed. Download or view your ticket anytime in your wallet.`
+                : "Your order has been confirmed. Lifetime Pro access is now active on your account!"}
             </p>
           </motion.div>
 
@@ -171,10 +174,14 @@ export default function SuccessContent({ sessionData }) {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                    Order Summary
+                    {sessionData.isEventBooking ? "Digital Ticket Pass" : "Order Summary"}
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Transaction ID: <span className="font-mono text-slate-700 dark:text-slate-300">{sessionId ? `${sessionId.slice(0, 16)}...` : "N/A"}</span>
+                    {sessionData.ticketCode ? (
+                      <>Ticket Pass ID: <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400">{sessionData.ticketCode}</span></>
+                    ) : (
+                      <>Transaction ID: <span className="font-mono text-slate-700 dark:text-slate-300">{sessionId ? `${sessionId.slice(0, 16)}...` : "N/A"}</span></>
+                    )}
                   </p>
                 </div>
               </div>
@@ -185,72 +192,117 @@ export default function SuccessContent({ sessionData }) {
             </div>
 
             {/* Line Item Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div className="rounded-2xl bg-slate-50/80 p-4 dark:bg-slate-800/50">
-                <span className="text-xs text-slate-500 dark:text-slate-400 block font-medium mb-1">
-                  Purchased Plan
-                </span>
-                <span className="font-bold text-slate-900 dark:text-white block">
-                  Pro Organizer Lifetime Deal
-                </span>
-                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                  One-time payment • Lifetime access
-                </span>
-              </div>
+            {sessionData.isEventBooking ? (
+              <div className="space-y-4">
+                {/* Event Summary Box */}
+                <div className="p-4 rounded-2xl bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-200/60 dark:border-indigo-800/50 space-y-2">
+                  <h4 className="text-base font-bold text-slate-900 dark:text-white">
+                    {sessionData.eventTitle}
+                  </h4>
+                  <div className="flex flex-wrap gap-4 text-xs text-slate-600 dark:text-slate-300">
+                    {sessionData.eventDate && (
+                      <span><strong>Date:</strong> {new Date(sessionData.eventDate).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" })}</span>
+                    )}
+                    {sessionData.location && (
+                      <span><strong>Location:</strong> {sessionData.location}</span>
+                    )}
+                  </div>
+                </div>
 
-              <div className="rounded-2xl bg-slate-50/80 p-4 dark:bg-slate-800/50">
-                <span className="text-xs text-slate-500 dark:text-slate-400 block font-medium mb-1">
-                  Amount Paid
-                </span>
-                <span className="text-xl font-extrabold text-slate-900 dark:text-white block">
-                  {formattedAmount}
-                </span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  USD
-                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                  <div className="rounded-2xl bg-slate-50/80 p-4 dark:bg-slate-800/50">
+                    <span className="text-xs text-slate-500 dark:text-slate-400 block font-medium mb-1">
+                      Ticket Quantity
+                    </span>
+                    <span className="font-bold text-slate-900 dark:text-white block">
+                      {sessionData.quantity} {sessionData.quantity > 1 ? "Tickets" : "Ticket"}
+                    </span>
+                    <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                      Status: Confirmed Seat
+                    </span>
+                  </div>
+
+                  <div className="rounded-2xl bg-slate-50/80 p-4 dark:bg-slate-800/50">
+                    <span className="text-xs text-slate-500 dark:text-slate-400 block font-medium mb-1">
+                      Total Paid
+                    </span>
+                    <span className="text-xl font-extrabold text-slate-900 dark:text-white block">
+                      {formattedAmount}
+                    </span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                      USD via Stripe
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                <div className="rounded-2xl bg-slate-50/80 p-4 dark:bg-slate-800/50">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 block font-medium mb-1">
+                    Purchased Plan
+                  </span>
+                  <span className="font-bold text-slate-900 dark:text-white block">
+                    Pro Organizer Lifetime Deal
+                  </span>
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                    One-time payment • Lifetime access
+                  </span>
+                </div>
+
+                <div className="rounded-2xl bg-slate-50/80 p-4 dark:bg-slate-800/50">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 block font-medium mb-1">
+                    Amount Paid
+                  </span>
+                  <span className="text-xl font-extrabold text-slate-900 dark:text-white block">
+                    {formattedAmount}
+                  </span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    USD
+                  </span>
+                </div>
+              </div>
+            )}
 
             {/* Email Notification Note */}
             {customerEmail && (
               <div className="flex items-start gap-3 rounded-2xl bg-indigo-50/60 p-4 text-xs text-indigo-900 dark:bg-indigo-950/50 dark:text-indigo-200 border border-indigo-100 dark:border-indigo-800/50">
                 <Mail size={18} className="shrink-0 text-indigo-600 dark:text-indigo-400 mt-0.5" />
                 <div>
-                  A confirmation receipt and invoice details have been sent to{" "}
+                  A ticket confirmation and entry receipt have been sent to{" "}
                   <strong className="font-semibold text-slate-900 dark:text-white">{customerEmail}</strong>.
                 </div>
               </div>
             )}
 
-            {/* Unlocked Pro Features Checklist */}
+            {/* Unlocked Benefits */}
             <div className="pt-2">
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-3">
-                Unlocked Pro Benefits:
+                {sessionData.isEventBooking ? "Booking Privileges:" : "Unlocked Pro Benefits:"}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs font-medium text-slate-700 dark:text-slate-300">
                 <div className="flex items-center gap-2">
                   <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
                     <Check size={11} strokeWidth={3} />
                   </span>
-                  <span>Unlimited Organizations Publish</span>
+                  <span>Instant Digital Ticket Delivery</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
                     <Check size={11} strokeWidth={3} />
                   </span>
-                  <span>Unlimited Custom Ticket Tiers</span>
+                  <span>Guaranteed Event Admission</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
                     <Check size={11} strokeWidth={3} />
                   </span>
-                  <span>Featured Homepage Placement</span>
+                  <span>Mobile & QR Code Access</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
                     <Check size={11} strokeWidth={3} />
                   </span>
-                  <span>24/7 Priority Support</span>
+                  <span>Full Customer Support</span>
                 </div>
               </div>
             </div>
@@ -259,11 +311,11 @@ export default function SuccessContent({ sessionData }) {
           {/* Action Buttons */}
           <motion.div variants={itemVariants} className="mt-8 w-full space-y-3 sm:space-y-0 sm:flex sm:items-center sm:justify-center sm:gap-4">
             <Link
-              href="/dashboard"
+              href={sessionData.isEventBooking ? "/dashboard/attendee/bookings" : "/dashboard"}
               className="flex w-full sm:w-auto items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-600 to-purple-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:scale-[1.02] hover:shadow-indigo-500/40 active:scale-[0.98]"
             >
               <LayoutDashboard size={18} />
-              Go to Dashboard
+              {sessionData.isEventBooking ? "View My Bookings Wallet" : "Go to Dashboard"}
               <ArrowRight size={16} />
             </Link>
 
@@ -272,7 +324,7 @@ export default function SuccessContent({ sessionData }) {
               className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white/80 px-6 py-3.5 text-sm font-semibold text-slate-700 shadow-sm transition-all duration-300 hover:bg-slate-100 hover:text-slate-900 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
             >
               <CalendarDays size={18} />
-              Explore Events
+              Explore More Events
             </Link>
           </motion.div>
 

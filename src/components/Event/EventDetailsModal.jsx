@@ -29,6 +29,7 @@ import {
   CreditCard,
   Check,
 } from "lucide-react";
+import { createBooking } from "@/lib/actions/booking";
 
 export default function EventDetailsModal({ event, isOpen, onClose, isSectionModal = false }) {
   const router = useRouter();
@@ -102,9 +103,50 @@ export default function EventDetailsModal({ event, isOpen, onClose, isSectionMod
   const handleConfirmBooking = async () => {
     setIsSubmitting(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      setIsBookingSuccess(true);
-      toast.success("Ticket booked successfully!");
+      if (totalPrice > 0) {
+        // Initiate Stripe Checkout for paid events
+        const res = await fetch("/api/event_checkout_session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            eventId: event._id,
+            quantity: ticketQuantity,
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          throw new Error(data.error || "Failed to initiate payment");
+        }
+
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        }
+      }
+
+      // Handle direct free booking ($0)
+      const bookingRes = await createBooking({
+        eventId: event._id,
+        eventTitle: event.title,
+        eventBanner: event.banner,
+        eventDate: event.date,
+        location: event.location,
+        userEmail: user.email,
+        userName: user.name || user.email,
+        quantity: ticketQuantity,
+        unitPrice: 0,
+        totalPrice: 0,
+        paymentStatus: "free",
+        organizerEmail: event.organizerEmail,
+      });
+
+      if (bookingRes?.success) {
+        setIsBookingSuccess(true);
+        toast.success("Free ticket booked successfully!");
+      } else {
+        throw new Error(bookingRes?.message || "Failed to book ticket");
+      }
     } catch (err) {
       toast.error(err.message || "Failed to book ticket");
     } finally {
