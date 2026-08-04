@@ -79,6 +79,10 @@ export default function AttendeePaymentsPage() {
     return matchesSearch;
   });
 
+  if (loading) {
+    return <PaymentsSkeleton rows={5} showHeader={true} />;
+  }
+
   return (
     <div className="space-y-8 pb-12">
       {/* Header Banner */}
@@ -178,9 +182,7 @@ export default function AttendeePaymentsPage() {
       </div>
 
       {/* Payment Records Table */}
-      {loading ? (
-        <PaymentsSkeleton rows={5} showHeader={false} />
-      ) : filteredPayments.length === 0 ? (
+      {filteredPayments.length === 0 ? (
         /* Empty State */
         <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 bg-white/60 dark:bg-slate-900/50 p-16 text-center backdrop-blur-sm space-y-4">
           <div className="w-16 h-16 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 flex items-center justify-center text-emerald-600 dark:text-emerald-400">

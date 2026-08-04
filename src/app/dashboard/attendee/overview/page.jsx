@@ -1,8 +1,14 @@
+import AttendeeOverviewView from "@/components/Overview/AttendeeOverviewView";
+
+export const metadata = {
+  title: "Attendee Overview | EventFlow Dashboard",
+  description: "View attendee profile details, ticket stats, spending analytics, and upcoming event passes."
+};
+
 export default function AttendeeOverviewPage() {
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold tracking-tight">Overview Stats</h1>
-      <p className="text-slate-500 dark:text-slate-400">Tickets, spend, and upcoming events stats overview.</p>
+    <div className="container mx-auto">
+      <AttendeeOverviewView />
     </div>
   );
 }

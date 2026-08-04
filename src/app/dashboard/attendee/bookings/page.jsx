@@ -95,6 +95,10 @@ export default function AttendeeBookingsPage() {
     window.print();
   };
 
+  if (loading) {
+    return <BookingsSkeleton cards={6} showHeader={true} />;
+  }
+
   return (
     <div className="space-y-8 pb-12">
       {/* Page Header */}
@@ -170,9 +174,7 @@ export default function AttendeeBookingsPage() {
       </div>
 
       {/* Bookings Content */}
-      {loading ? (
-        <BookingsSkeleton cards={6} showHeader={false} />
-      ) : filteredBookings.length === 0 ? (
+      {filteredBookings.length === 0 ? (
         /* Empty State */
         <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 bg-white/60 dark:bg-slate-900/50 p-16 text-center backdrop-blur-sm space-y-4">
           <div className="w-16 h-16 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800/60 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
