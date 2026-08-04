@@ -20,6 +20,7 @@ import {
   X
 } from "lucide-react";
 import Link from "next/link";
+import PaymentsSkeleton from "@/components/Payments/PaymentsSkeleton";
 
 export default function AttendeePaymentsPage() {
   const { data: session } = authClient.useSession();
@@ -178,14 +179,7 @@ export default function AttendeePaymentsPage() {
 
       {/* Payment Records Table */}
       {loading ? (
-        <div className="space-y-4">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div
-              key={i}
-              className="animate-pulse h-20 w-full rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4"
-            />
-          ))}
-        </div>
+        <PaymentsSkeleton rows={5} showHeader={false} />
       ) : filteredPayments.length === 0 ? (
         /* Empty State */
         <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 bg-white/60 dark:bg-slate-900/50 p-16 text-center backdrop-blur-sm space-y-4">

@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import BookingsSkeleton from "@/components/Bookings/BookingsSkeleton";
 
 export default function AttendeeBookingsPage() {
   const { data: session } = authClient.useSession();
@@ -170,18 +171,7 @@ export default function AttendeeBookingsPage() {
 
       {/* Bookings Content */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div
-              key={i}
-              className="animate-pulse rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 space-y-4"
-            >
-              <div className="h-36 w-full rounded-2xl bg-slate-200 dark:bg-slate-800" />
-              <div className="h-5 w-3/4 bg-slate-200 dark:bg-slate-800 rounded-md" />
-              <div className="h-4 w-1/2 bg-slate-200 dark:bg-slate-800 rounded-md" />
-            </div>
-          ))}
-        </div>
+        <BookingsSkeleton cards={6} showHeader={false} />
       ) : filteredBookings.length === 0 ? (
         /* Empty State */
         <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-300 dark:border-slate-800 bg-white/60 dark:bg-slate-900/50 p-16 text-center backdrop-blur-sm space-y-4">
