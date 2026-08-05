@@ -23,6 +23,18 @@ export async function POST(req) {
             );
         }
 
+        // Check if user is blocked in DB
+        const userRes = await fetch(`${SERVER_URL}/api/user/${user.email}`, { cache: "no-store" });
+        if (userRes.ok) {
+            const userData = await userRes.json();
+            if (userData?.isBlocked === true || userData?.status === 'blocked') {
+                return NextResponse.json(
+                    { error: "Your account has been blocked by an administrator. You cannot book tickets." },
+                    { status: 403 }
+                );
+            }
+        }
+
         // 2. Parse payload
         const body = await req.json();
         const { eventId, quantity = 1 } = body;

@@ -91,6 +91,10 @@ export default function EventDetailsModal({ event, isOpen, onClose, isSectionMod
     : "N/A";
 
   const handleBookTicketClick = () => {
+    if (user?.isBlocked === true || user?.status === "blocked") {
+      toast.error("Your account has been blocked by an administrator. Ticket booking is disabled.");
+      return;
+    }
     if (!user || userRole !== "attendee") {
       setIsLoginModalOpen(true);
     } else {

@@ -24,8 +24,14 @@ export default function UpdateProfileForm({
   const [image, setImage] = useState(user?.image || "");
   const [loading, setLoading] = useState(isLoading);
 
+  const isBlocked = user?.isBlocked === true || user?.status === "blocked";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isBlocked) {
+      toast.error("Your account is blocked by an administrator. Profile updates are disabled.");
+      return;
+    }
     if (user?.email?.toLowerCase() === "demouser@gmail.com") {
       toast.error("Demo account profile changes are disabled!");
       return;
@@ -59,6 +65,12 @@ export default function UpdateProfileForm({
           Change your public display name and avatar picture URL.
         </p>
       </div>
+
+      {isBlocked && (
+        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center gap-2">
+          <span>⚠️ Your account is currently blocked by an administrator. Profile editing is disabled.</span>
+        </div>
+      )}
 
       <Form onSubmit={handleSubmit} className="space-y-5">
         <Fieldset.Group className="space-y-4">
