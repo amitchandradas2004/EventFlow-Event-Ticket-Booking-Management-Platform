@@ -132,3 +132,44 @@ export const getAllPublicEvents = async ({ page = 1, limit = 12, search = "", ca
     }
 };
 
+export const getAdminEvents = async (page = 1, limit = 10, search = "", status = "all") => {
+    try {
+        const queryParams = new URLSearchParams({
+            page: page.toString(),
+            limit: limit.toString(),
+            search: search,
+            status: status
+        });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/events?${queryParams.toString()}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            cache: "no-store"
+        });
+        const result = await res.json();
+        if (!res.ok) {
+            throw new Error(result.message || "Failed to fetch admin events");
+        }
+        return result;
+    } catch (err) {
+        return { success: false, total: 0, page: 1, limit: 10, totalPages: 1, result: [], stats: {} };
+    }
+};
+
+export const updateEventStatus = async (id, status) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/event/${id}/status`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status })
+    });
+    const result = await res.json();
+    if (!res.ok) {
+        throw new Error(result.message || "Failed to update event status");
+    }
+    revalidatePath("/dashboard/admin/events");
+    return result;
+};
+
