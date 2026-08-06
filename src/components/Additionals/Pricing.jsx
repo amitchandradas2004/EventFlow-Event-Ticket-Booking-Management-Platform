@@ -16,6 +16,8 @@ import {
   UserPlus,
   Crown,
   LayoutDashboard,
+  ShieldAlert,
+  Info,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -26,11 +28,14 @@ export default function Pricing({ searchParams = {} }) {
   const { data: session } = authClient.useSession();
   const user = session?.user;
   const isPremium = Boolean(user?.isPremium);
+  const userRole = (user?.role || "attendee").toLowerCase();
+  const isOrganizer = userRole === "organizer";
 
   const [isFreeModalOpen, setIsFreeModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [isAlreadyPremiumModalOpen, setIsAlreadyPremiumModalOpen] = useState(false);
+  const [isNotOrganizerModalOpen, setIsNotOrganizerModalOpen] = useState(false);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -58,6 +63,8 @@ export default function Pricing({ searchParams = {} }) {
   const handlePremiumClick = () => {
     if (!user) {
       setIsLoginModalOpen(true);
+    } else if (!isOrganizer) {
+      setIsNotOrganizerModalOpen(true);
     } else if (isPremium) {
       setIsAlreadyPremiumModalOpen(true);
     } else {
@@ -326,6 +333,9 @@ export default function Pricing({ searchParams = {} }) {
                   className="transition-transform duration-300 group-hover/btn:translate-x-1"
                 />
               </button>
+              <p className="mt-2 text-center text-xs text-slate-500 dark:text-slate-400 font-medium">
+                Exclusively for Event Organizers • Free for attendees
+              </p>
             </div>
           </motion.div>
         </motion.div>
@@ -599,6 +609,82 @@ export default function Pricing({ searchParams = {} }) {
                     className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 py-3 px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700/80 cursor-pointer"
                   >
                     Close
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Non-Organizer / Attendee Notice Modal */}
+      <AnimatePresence>
+        {isNotOrganizerModalOpen && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsNotOrganizerModalOpen(false)}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="relative z-10 w-full max-w-md overflow-hidden rounded-3xl border border-amber-200/60 bg-white p-6 sm:p-8 shadow-2xl dark:border-amber-500/30 dark:bg-slate-900"
+            >
+              <button
+                type="button"
+                onClick={() => setIsNotOrganizerModalOpen(false)}
+                className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+
+              <div className="flex flex-col items-center text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-indigo-600 text-white shadow-lg shadow-amber-500/30">
+                  <ShieldAlert size={32} />
+                </div>
+
+                <h3 className="mt-5 text-2xl font-extrabold text-slate-900 dark:text-white">
+                  Organizers Only Package
+                </h3>
+
+                <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Only <strong className="font-semibold text-indigo-600 dark:text-indigo-400">Event Organizers</strong> can buy the premium package to publish unlimited organizations.
+                </p>
+
+                <div className="mt-4 w-full rounded-2xl bg-amber-50/80 dark:bg-amber-950/40 p-4 border border-amber-200/60 dark:border-amber-800/50 text-left space-y-2 text-xs text-slate-700 dark:text-slate-200">
+                  <div className="flex items-center gap-2 font-bold text-amber-700 dark:text-amber-300">
+                    <Info size={16} />
+                    <span>No Purchase Required</span>
+                  </div>
+                  <p className="text-slate-600 dark:text-slate-300 leading-normal">
+                    As an attendee or general user, all event browsing, ticket bookings, and account features are <strong>100% free</strong> for you! You don't need to purchase this plan.
+                  </p>
+                </div>
+
+                <div className="mt-6 w-full space-y-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsNotOrganizerModalOpen(false);
+                      router.push("/events");
+                    }}
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 py-3.5 px-4 text-sm font-bold text-white shadow-md hover:from-indigo-500 hover:to-purple-500 transition-all cursor-pointer"
+                  >
+                    Browse Events
+                    <ArrowRight size={16} />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsNotOrganizerModalOpen(false)}
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 py-3 px-4 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700/80 cursor-pointer"
+                  >
+                    Understood
                   </button>
                 </div>
               </div>

@@ -19,6 +19,14 @@ export async function POST() {
             );
         }
 
+        const userRole = (user?.role || "attendee").toLowerCase();
+        if (userRole !== "organizer") {
+            return NextResponse.json(
+                { error: "Only organizers can purchase the premium package." },
+                { status: 403 }
+            );
+        }
+
         if (user?.isPremium) {
             return NextResponse.json(
                 { error: "You are already a premium member" },
