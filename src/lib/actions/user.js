@@ -85,4 +85,36 @@ export const toggleUserBlockStatus = async (userId, isBlocked) => {
         console.error('Error in toggleUserBlockStatus:', error);
         throw error;
     }
+};
+
+export const getAdminAnalytics = async () => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/analytics`, {
+            cache: 'no-store'
+        });
+        if (!res.ok) {
+            throw new Error('Failed to fetch admin analytics');
+        }
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.error('Error in getAdminAnalytics:', error);
+        return { success: false, message: error.message };
+    }
+};
+
+export const getAdminOverview = async () => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/overview`, {
+            cache: 'no-store'
+        });
+        if (!res.ok) {
+            throw new Error('Failed to fetch admin overview');
+        }
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.error('Error in getAdminOverview:', error);
+        return { success: false, message: error.message };
+    }
 };
