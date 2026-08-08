@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
 import ScrollProgressBar from "@/components/Layout/ScrollProgressBar";
 import BlockedUserGuard from "@/components/BlockedUserGuard";
+import AIChatBot from "@/components/Chat/AIChatBot";
 
 export function AppShell({ children }) {
   const pathname = usePathname();
@@ -17,6 +18,7 @@ export function AppShell({ children }) {
       {!isDashboard && <Navbar />}
       {children}
       {!isDashboard && <Footer />}
+      <AIChatBot />
     </>
   );
 }
